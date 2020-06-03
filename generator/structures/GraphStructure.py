@@ -47,7 +47,7 @@ class GraphStructure:
             g = self.add_weight_to_nodes(g)
         if self.edge_weighted:
             g = self.add_weight_to_edges(g)
-        result = list(g.edges.data('weight'))
+        result = list(g.edges.data())
 
         return result
 
@@ -57,10 +57,12 @@ class GraphStructure:
         return g
 
     def connected_graph(self, vertex_count, edge_count):
+        if edge_count < vertex_count-1:
+            return nx.Graph()
         g = nx.random_tree(vertex_count)
         while nx.number_of_edges(g) != edge_count:
-            x = random.randint(0, vertex_count-1)
-            y = random.randint(0, vertex_count-1)
+            x = random.randint(0, vertex_count - 1)
+            y = random.randint(0, vertex_count - 1)
             if x == y:
                 continue
             g.add_edge(x, y)
@@ -71,8 +73,8 @@ class GraphStructure:
     def acyclic_graph(self, vertex_count, edge_count):
         g = nx.gn_graph(vertex_count)
         while nx.number_of_edges(g) != edge_count:
-            x = random.randint(0, vertex_count-1)
-            y = random.randint(0, vertex_count-1)
+            x = random.randint(0, vertex_count - 1)
+            y = random.randint(0, vertex_count - 1)
             if x == y:
                 continue
             g.add_edge(max(x, y), min(x, y))
@@ -84,7 +86,7 @@ class GraphStructure:
 
     def bipartite_graph(self, vertex_count, edge_count):
         first_set = random.randint(0, vertex_count)
-        secon_set = vertex_count-first_set
+        secon_set = vertex_count - first_set
         g = nx.bipartite.gnmk_random_graph(
             first_set, secon_set, edge_count, directed=self.directed)
         return g
@@ -105,16 +107,16 @@ class GraphStructure:
         return g
 
     def add_loop(self, vertex_count, edge_count, graph):
-        edges_left = self.edge_count_range[1]-edge_count
+        edges_left = self.edge_count_range[1] - edge_count
         added_edge_count = random.randint(0, edges_left)
         final_edge_count = edge_count + added_edge_count
-        while graph.number_of_edges() != final_edge_count:
-            x = random.randint(0, vertex_count-1)
+        while nx.number_of_edges(graph) != final_edge_count:
+            x = random.randint(0, vertex_count - 1)
             graph.add_edge(x, x)
         return graph
 
     def to_multi(self, edge_count, graph):
-        edges_left = self.edge_count_range[1]-edge_count
+        edges_left = self.edge_count_range[1] - edge_count
         added_edge_count = random.randint(0, edges_left)
         final_edge_count = edge_count + added_edge_count
         if self.directed:
@@ -124,8 +126,8 @@ class GraphStructure:
         g.add_nodes_from(graph.nodes)
         g.add_edges_from(graph.edges)
         edges = list(graph.edges)
-        while graph.number_of_edges() != final_edge_count:
-            x = random.randint(0, len(edges)-1)
+        while nx.number_of_edges(graph) != final_edge_count:
+            x = random.randint(0, len(edges) - 1)
             g.add_edge(tuple(edges[x])[0], tuple(edges[x])[1])
         return g
 

@@ -36,7 +36,7 @@ class TreeStructure:
             t = self.add_weight_to_nodes(t)
         if self.edge_weighted:
             t = self.add_weight_to_edges(t)
-        result = list(t.edges)
+        result = list(t.edges.data())
 
         return result
 
@@ -44,15 +44,15 @@ class TreeStructure:
         return []
 
     def connected_tree(self, maximal_children_count, vertex_count):
-        degree_sequence = [1]*vertex_count
-        degree_sum = 2*(vertex_count-1)-vertex_count
+        degree_sequence = [1] * vertex_count
+        degree_sum = 2 * (vertex_count - 1) - vertex_count
         i = 0
         while degree_sum > 0 and i < vertex_count:
-            if i == vertex_count-1:
+            if i == vertex_count - 1:
                 degree = degree_sum
             else:
                 degree = random.randint(
-                    0, min(maximal_children_count-1, degree_sum))
+                    0, min(maximal_children_count - 1, degree_sum))
             degree_sequence[i] += degree
             degree_sum -= degree
             i += 1
