@@ -21,5 +21,36 @@ Ext.define('test.controllers.MainController', {
 
     onTypeChange: function(el) {
         console.log("asdasdsasad");
+    },
+    
+    fnGetPathForXtype(xtype) {
+        if(xtype == "flowNetworkMainView") 
+            return "Generate/FlowNetwork";
+            
+        if(xtype == "graphMainView") 
+            return "Generate/Graph";
+
+        if(xtype == "mazeMainView") 
+            return "Generate/Maze";
+
+        if(xtype == "sequenceMainView") 
+            return "Generate/Sequence";
+
+        if(xtype == "stringMainView") 
+            return "Generate/String";
+
+        if(xtype == "treeMainView") 
+            return "Generate/Tree";
+    },
+    
+    onGenerateClick: function(el) {
+        var form = el.up('form');
+        var values = form.getValues();
+        var path = this.fnGetPathForXtype(form.xtype);
+
+        Helpers.ajaxRequest(path, values, function(result){
+        }, 
+        function(result) {
+        });
     }
 });

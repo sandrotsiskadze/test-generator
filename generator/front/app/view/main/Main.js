@@ -6,7 +6,7 @@
  * TODO - Replace this content of this view to suite the needs of your application.
  */
 Ext.define('test.view.main.Main', {
-    extend: 'Ext.Panel',
+    extend: 'Ext.tab.Panel',
     xtype: 'app-main',
 
     requires: [
@@ -24,50 +24,29 @@ Ext.define('test.view.main.Main', {
 
     items: [
         {
-            xtype: "container",
-            margin: "10 10 10 10",
-            layout: { type: "hbox", align: "stretch" },
-            items:[
-                {
-                    xtype: 'combobox',
-                    labelWidth: 80,
-                    labelStyle: "text-align:right;",
-                    emptyText: "დასახელება",
-                    fieldLabel: "დასახელება",
-                    displayField: 'name',
-                    valueField: 'name',
-                    store: {
-                        type: 'personnel'
-                    },
-                    listeners: {
-                        change: 'onTypeChange'
-                    }
-                }, 
-                {
-                    xtype: 'combobox',
-                    labelWidth: 80,
-                    labelStyle: "text-align:right;",
-                    emptyText: "დასახელება",
-                    fieldLabel: "დასახელება",
-                    displayField: 'name',
-                    valueField: 'name',
-                    store: {
-                        type: 'personnel'
-                    }
-                }, 
-                {
-                    xtype: 'combobox',
-                    labelWidth: 80,
-                    labelStyle: "text-align:right;",
-                    emptyText: "დასახელება",
-                    fieldLabel: "დასახელება",
-                    displayField: 'name',
-                    valueField: 'name',
-                    store: {
-                        type: 'personnel'
-                    }
-                }
-            ]
+            xtype: "graphMainView",
+            title: "Graph"
+
+        }, 
+        {
+            xtype: "treeMainView",
+            title: "Tree"
+        }, 
+        {
+            xtype: "flowNetworkMainView",
+            title: "Flow Network"
+        }, 
+        {
+            xtype: "sequenceMainView",
+            title: "Sequence"
+        }, 
+        {
+            xtype: "mazeMainView",
+            title: "Maze"
+        }, 
+        {
+            xtype: "stringMainView",
+            title: "String"
         }
     ]
 });
