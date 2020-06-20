@@ -21,23 +21,27 @@ class GraphStructure:
         self.edge_count_range = edge_count_range
 
     def get_graph(self):
+        result = []
+
         vertex_count = random.randint(
             self.vertex_count_range[0], self.vertex_count_range[1])
-        edge_count = random.randint(
-            self.edge_count_range[0], self.edge_count_range[1])
-        return self.generate_graph(vertex_count, edge_count)
-
-    def generate_graph(self, vertex_count, edge_count):
-        result = []
         if self.connected:
+            edge_count = random.randint(
+                vertex_count - 1, self.edge_count_range[1])
             g = self.connected_graph(vertex_count, edge_count)
         elif self.acyclic:
+            edge_count = random.randint(
+                vertex_count - 1, self.edge_count_range[1])
             g = self.acyclic_graph(vertex_count, edge_count)
         elif self.complete:
             g = self.complete_graph(vertex_count)
         elif self.bipartite:
+            edge_count = random.randint(
+                self.edge_count_range[0], self.edge_count_range[1])
             g = self.bipartite_graph(vertex_count, edge_count)
         else:
+            edge_count = random.randint(
+                self.edge_count_range[0], self.edge_count_range[1])
             g = self.default_graph(vertex_count, edge_count)
         if self.loop:
             g = self.add_loop(vertex_count, edge_count, g)

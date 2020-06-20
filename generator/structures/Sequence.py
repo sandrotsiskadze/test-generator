@@ -1,3 +1,4 @@
+import networkx as nx
 import random
 
 
@@ -18,9 +19,12 @@ class Sequence:
     def generate_sequence(self, element_count):
         result = []
         if self.permutation:
-            seq = self.permutations()
+            seq = self.permute()
         else:
             seq = self.sequence(element_count)
+        if self.query:
+            print(self.queries(
+                self.permutation_number if self.permutation else element_count))
         result = seq
         return result
 
@@ -31,6 +35,19 @@ class Sequence:
                 self.element_value_range[0], self.element_value_range[1]))
         return result
 
-    def permutations(self):
+    def permute(self):
         result = []
+        nums = list(range(1, self.permutation_number + 1))
+        for _ in range(self.permutation_number):
+            if len(nums) == 1:
+                result.append(nums[0])
+                del nums[0]
+            else:
+                x = random.randint(0, len(nums) - 1)
+                result.append(nums[x])
+                del nums[x]
         return result
+
+    def queries(self, element_count):
+        g = nx.gnm_random_graph(element_count, self.query_count)
+        return g.edges
