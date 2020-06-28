@@ -1,97 +1,142 @@
 Ext.define("test.view.main.Main.MazeMainView", {
-    extend: "Ext.form.Panel",
-    alias: "widget.mazeMainView",
-    initComponent: function() {
-        Ext.apply(this, {
-            border: false,
-            bodyPadding: 10,
-            items: [
+  extend: "Ext.form.Panel",
+  alias: "widget.mazeMainView",
+  initComponent: function () {
+    Ext.apply(this, {
+      border: false,
+      bodyPadding: 10,
+      items: [
+        {
+          xtype: "container",
+          layout: {
+            type: "hbox",
+            align: "stretch",
+          },
+          items: [
             {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
+              xtype: "container",
+              flex: 1,
+              layout: "anchor",
+              items: [
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
                     type: "hbox",
-                    align: "stretch"
-                },
-                items: [
+                    align: "stretch",
+                  },
+                  items: [
                     {
-                        xtype: 'numberfield',
-                        name: 'DimensionX',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Dimension-X',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
+                      xtype: "numberfield",
+                      name: "DimensionX",
+                      flex: 1,
+                      margin: "0 5 0 0",
+                      labelWidth: 220,
+                      minValue: 0,
+                      emptyText: "Dimension-X",
+                      allowDecimals: false,
                     },
                     {
-                        xtype: 'numberfield',
-                        name: 'DimensionY',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Dimension-Y',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
-                    }
-                ]
-            },{
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
+                      xtype: "numberfield",
+                      name: "DimensionY",
+                      flex: 1,
+                      margin: "0 0 0 5",
+                      labelWidth: 220,
+                      minValue: 0,
+                      emptyText: "Dimension-Y",
+                      allowDecimals: false,
+                    },
+                  ],
                 },
-                items: [{
-                    xtype: 'textfield',
-                    name: 'WallCharacter',
-                    labelWidth: 220,
-                    minValue: 0,
-                    maskRe: /[A-Za-z]/,
-                    maxLength: 1,
-                    fieldLabel: 'Wall Character',
-                    labelStyle: "text-align:right;"
-                }, {
-                    xtype: 'textfield',
-                    name: 'PathCharacter',
-                    labelWidth: 220,
-                    minValue: 0,
-                    maskRe: /[A-Za-z]/,
-                    maxLength: 1,
-                    fieldLabel: 'Path Character',
-                    labelStyle: "text-align:right;"
-                }]
-            }, {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
                     type: "hbox",
-                    align: "stretch"
+                    align: "stretch",
+                  },
+                  items: [
+                    {
+                      xtype: "textfield",
+                      name: "WallCharacter",
+                      flex: 1,
+                      margin: "0 5 0 0",
+                      minValue: 0,
+                      maskRe: /[A-Za-z]/,
+                      maxLength: 1,
+                      emptyText: "Wall Character",
+                    },
+                    {
+                      xtype: "textfield",
+                      name: "PathCharacter",
+                      flex: 1,
+                      margin: "0 0 0 5",
+                      minValue: 0,
+                      maskRe: /[A-Za-z]/,
+                      maxLength: 1,
+                      emptyText: "Path Character",
+                    },
+                  ],
                 },
-                items: [{
-                    xtype: 'checkboxfield',
-                    name: 'Connected',
-                    labelWidth: 220,
-                    fieldLabel: 'Connected',
-                    labelStyle: "text-align:right;"
-                }]
-            }, {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
                     type: "hbox",
-                    align: "stretch"
+                    align: "stretch",
+                  },
+                  items: [
+                    {
+                      xtype: "checkboxfield",
+                      name: "Connected",
+                      labelStyle: "text-align:right;",
+                      fieldLabel: "Connected",
+                    },
+                  ],
                 },
-                items: [{
-                    xtype: 'button',
-                    margin: "10 10 10 220",
-                    text: 'Generate',
-                    listeners: {
-                        click: 'onGenerateClick'
-                    }
-                }]
-            }]
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
+                    type: "hbox",
+                    align: "stretch",
+                    pack: "center",
+                  },
+                  items: [
+                    {
+                      xtype: "button",
+                      margin: "10 10 10 10",
+                      text: "Generate",
+                      listeners: {
+                        click: "onGenerateClick",
+                      },
+                    },
+                  ],
+                },
+                {
+                  xtype: "textareafield",
+                  margin: "10 10 10 10",
+                  height: 300,
+                  anchor: "100%",
+                  name: "Answer",
+                  labelAlign: "top",
+                  fieldLabel: "Answer",
+                },
+              ],
+            },
+            {
+              xtype: "textareafield",
+              margin: "10 10 10 10",
+              height: 300,
+              flex: 1,
+              name: "Code",
+              emptyText: "YourCodeHere",
+            },
+          ],
+        },
+      ],
+    });
 
-        });
-
-        this.callParent();
-    }
+    this.callParent();
+  },
 });

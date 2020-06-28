@@ -14,95 +14,135 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
             border: false,
             bodyPadding: 10,
             items: [
-            {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
+                {
+                  xtype: "container",
+                  layout: {
                     type: "hbox",
-                    align: "stretch"
-                },
-                items: [
+                    align: "stretch",
+                  },
+                  items: [
                     {
-                        xtype: 'numberfield',
-                        name: 'VertexCountRangeFrom',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Vertex Count Range From',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
-                    },
-                    {
-                        xtype: 'numberfield',
-                        name: 'VertexCountRangeTo',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Vertex Count Range To',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
+                      xtype: "container",
+                      flex: 1,
+                      layout: 'anchor',
+                      items: [
+                        {
+                            xtype: "container",
+                            margin: "10 10 10 10",
+                            layout: {
+                                type: "hbox",
+                                align: "stretch"
+                            },
+                            items: [
+                                {
+                                    xtype: 'numberfield',
+                                    flex: 2,
+                                    margin:"0 5 0 0",
+                                    name: 'VertexCountRangeFrom',
+                                    minValue: 0,
+                                    emptyText: 'Vertex Count Range From',
+                                    allowDecimals: false
+                                },
+                                {
+                                    xtype: 'numberfield',
+                                    flex: 2,
+                                    margin:"0 0 0 5",
+                                    name: 'VertexCountRangeTo',
+                                    minValue: 0,
+                                    emptyText: 'Vertex Count Range To',
+                                    labelStyle: "text-align:right;",
+                                    allowDecimals: false
+                                }
+                            ]
+                        }, 
+                        {
+                            xtype: "container",
+                            margin: "10 10 10 10",
+                            layout: {
+                                type: "hbox",
+                                align: "stretch"
+                            },
+                            items: [
+                                {
+                                    xtype: 'numberfield',
+                                    flex: 2,
+                                    margin:"0 5 0 0",
+                                    name: 'EdgeCountRangeFrom',
+                                    minValue: 0,
+                                    emptyText: 'Edge Count Range From',
+                                    labelStyle: "text-align:right;",
+                                    allowDecimals: false
+                                },
+                                {
+                                    xtype: 'numberfield',
+                                    flex: 2,
+                                    margin:"0 0 0 5",
+                                    name: 'EdgeCountRangeTo',
+                                    minValue: 0,
+                                    emptyText: 'Edge Count Range From',
+                                    labelStyle: "text-align:right;",
+                                    allowDecimals: false
+                                }
+                            ]
+                        },{
+                            xtype: "container",
+                            anchor: "50%",
+                            margin: "10 10 10 10",
+                            layout: {
+                                type: "hbox",
+                                align: "stretch"
+                            },
+                            items: [
+                                {
+                                    xtype: 'numberfield',
+                                    flex: 1,
+                                    name: 'MaximalWeight',
+                                    minValue: 0,
+                                    emptyText: 'Maximal Weight',
+                                    allowDecimals: false
+                                }
+                            ]
+                        },
+                        {
+                          xtype: "container",
+                          margin: "10 10 10 10",
+                          layout: {
+                            type: "hbox",
+                            align: "stretch",
+                            pack: "center"
+                          },
+                          items: [
+                            {
+                              xtype: "button",
+                              margin: "10 10 10 10",
+                              text: "Generate",
+                              listeners: {
+                                click: "onGenerateClick",
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          xtype: "textareafield",
+                          margin: "10 10 10 10",
+                          height: 300,
+                          anchor: "100%",
+                          name: "Answer",
+                          labelAlign: "top",
+                          fieldLabel: "Answer"
+                        }
+                      ],
+                    }, {
+                      xtype: "textareafield",
+                      margin: "10 10 10 10",
+                      height: 300,
+                      flex : 1,
+                      name: "Code",
+                      emptyText: "YourCodeHere"
                     }
-                ]
-            }, 
-            {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
+                  ],
                 },
-                items: [
-                    {
-                        xtype: 'numberfield',
-                        name: 'EdgeCountRangeFrom',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Edge Count Range From',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
-                    },
-                    {
-                        xtype: 'numberfield',
-                        name: 'EdgeCountRangeTo',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Edge Count Range From',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
-                    }
-                ]
-            },{
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
-                },
-                items: [
-                    {
-                        xtype: 'numberfield',
-                        name: 'MaximalWeight',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Maximal Weight',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
-                    }
-                ]
-            }, {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
-                },
-                items: [{
-                    xtype: 'button',
-                    margin: "10 10 10 220",
-                    text: 'Generate',
-                    listeners: {
-                        click: 'onGenerateClick'
-                    }
-                }]
-            }]
+              ],
 
         });
 

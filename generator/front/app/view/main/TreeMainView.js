@@ -1,223 +1,284 @@
 Ext.define("test.view.main.Main.TreeMainView", {
-    extend: "Ext.form.Panel",
-    alias: "widget.treeMainView",
-    initComponent: function() {
-        Ext.apply(this, {
-            border: false,
-            bodyPadding: 10,
-            items: [{
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
+  extend: "Ext.form.Panel",
+  alias: "widget.treeMainView",
+  initComponent: function () {
+    Ext.apply(this, {
+      border: false,
+      bodyPadding: 10,
+      items: [
+        {
+          xtype: "container",
+          layout: {
+            type: "hbox",
+            align: "stretch",
+          },
+          items: [
+            {
+              xtype: "container",
+              flex: 1,
+              layout: "anchor",
+              items: [
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
                     type: "hbox",
-                    align: "stretch"
-                },
-                items: [
+                    align: "stretch",
+                  },
+                  items: [
                     {
-                        xtype: 'combobox',
-                        labelWidth: 220,
-                        labelStyle: "text-align:right;",
-                        emptyText: "დასახელება",
-                        fieldLabel: "დასახელება",
-                        displayField: 'name',
-                        valueField: 'id',
-                        store: Ext.create('Ext.data.Store', {
-                            fields: [{
-                                    type: 'string',
-                                    name: 'name'
-                                },
-                                {
-                                    type: 'int',
-                                    name: 'id'
-                                }
-                            ],
-                            data: [{
-                                    name: 'forest ',
-                                    id: 1
-                                },
-                                {
-                                    name: 'connected',
-                                    id: 2
-                                },
-                                {
-                                    name: 'binary',
-                                    id: 3
-                                },
-                                {
-                                    name: 'balanced',
-                                    id: 4
-                                }
-                            ]
-                        }),
+                      xtype: "combobox",
+                      flex: 1,
+                      margin: "0 5 0 0",
+                      emptyText: "დასახელება",
+                      displayField: "name",
+                      valueField: "id",
+                      store: Ext.create("Ext.data.Store", {
+                        fields: [
+                          {
+                            type: "string",
+                            name: "name",
+                          },
+                          {
+                            type: "int",
+                            name: "id",
+                          },
+                        ],
+                        data: [
+                          {
+                            name: "forest ",
+                            id: 1,
+                          },
+                          {
+                            name: "connected",
+                            id: 2,
+                          },
+                          {
+                            name: "binary",
+                            id: 3,
+                          },
+                          {
+                            name: "balanced",
+                            id: 4,
+                          },
+                        ],
+                      }),
                     },
                     {
-                        xtype: 'checkboxfield',
-                        name: 'ArrayBased',
-                        labelWidth: 220,
-                        fieldLabel: 'Array Based',
-                        labelStyle: "text-align:right;",
-                    }
-                ]
-            }, {
-                xtype: 'checkboxfield',
-                name: 'VertexWeighted',
-                labelWidth: 220,
-                fieldLabel: 'Vertex Weighted',
-                labelStyle: "text-align:right;",
-                listeners: {
-                    change: function(el) {
-                        if(!el.getValue()) {
-                            el.up('treeMainView').down('[name=VertexWeightFrom]').disable();
-                            el.up('treeMainView').down('[name=VertexWeightTo]').disable();
-                        } else {
-                            el.up('treeMainView').down('[name=VertexWeightFrom]').enable();
-                            el.up('treeMainView').down('[name=VertexWeightTo]').enable();
-                        }
-                    }
-                }
-            }, {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
+                      xtype: "checkboxfield",
+                      name: "ArrayBased",
+                      flex: 1,
+                      margin: "0 0 0 5",
+                      fieldLabel: "Array Based",
+                      labelStyle: "text-align:right;",
+                    },
+                  ],
                 },
-                items: [
+                {
+                  xtype: "checkboxfield",
+                  name: "VertexWeighted",
+                  flex: 1,
+                  margin: "10 10 10 10",
+                  fieldLabel: "Vertex Weighted",
+                  labelStyle: "text-align:right;",
+                  listeners: {
+                    change: function (el) {
+                      if (!el.getValue()) {
+                        el.up("treeMainView")
+                          .down("[name=VertexWeightFrom]")
+                          .disable();
+                        el.up("treeMainView")
+                          .down("[name=VertexWeightTo]")
+                          .disable();
+                      } else {
+                        el.up("treeMainView")
+                          .down("[name=VertexWeightFrom]")
+                          .enable();
+                        el.up("treeMainView")
+                          .down("[name=VertexWeightTo]")
+                          .enable();
+                      }
+                    },
+                  },
+                },
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
+                    type: "hbox",
+                    align: "stretch",
+                  },
+                  items: [
                     {
-                        xtype: 'numberfield',
-                        name: 'VertexWeightFrom',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Vertex Weight From',
-                        labelStyle: "text-align:right;",
-                        disabled: true,
-                        allowDecimals: false
+                      xtype: "numberfield",
+                      name: "VertexWeightFrom",
+                      flex: 1,
+                      margin: "0 5 0 0",
+                      minValue: 0,
+                      emptyText: "Vertex Weight From",
+                      disabled: true,
+                      allowDecimals: false,
                     },
                     {
-                        xtype: 'numberfield',
-                        name: 'VertexWeightTo',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Vertex Weight To',
-                        labelStyle: "text-align:right;",
-                        disabled: true,
-                        allowDecimals: false
-                    }
-                ]
+                      xtype: "numberfield",
+                      name: "VertexWeightTo",
+                      flex: 1,
+                      margin: "0 0 0 5",
+                      minValue: 0,
+                      emptyText: "Vertex Weight To",
+                      disabled: true,
+                      allowDecimals: false,
+                    },
+                  ],
+                },
+                {
+                  xtype: "checkboxfield",
+                  name: "EdgeWeighted",
+                  margin: "10 10 10 10",
+                  flex: 1,
+                  fieldLabel: "Edge Weighted",
+                  labelStyle: "text-align:right;",
+                  listeners: {
+                    change: function (el) {
+                      if (!el.getValue()) {
+                        el.up("graphMainView")
+                          .down("[name=EdgeWeightFrom]")
+                          .disable();
+                        el.up("graphMainView")
+                          .down("[name=EdgeWeightTo]")
+                          .disable();
+                      } else {
+                        el.up("graphMainView")
+                          .down("[name=EdgeWeightFrom]")
+                          .enable();
+                        el.up("graphMainView")
+                          .down("[name=EdgeWeightTo]")
+                          .enable();
+                      }
+                    },
+                  },
+                },
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
+                    type: "hbox",
+                    align: "stretch",
+                  },
+                  items: [
+                    {
+                      xtype: "numberfield",
+                      name: "EdgeWeightFrom",
+                      flex: 1,
+                      margin: "0 5 0 0",
+                      minValue: 0,
+                      emptyText: "Edge Weight From",
+                      disabled: true,
+                      allowDecimals: false,
+                    },
+                    {
+                      xtype: "numberfield",
+                      name: "EdgeWeightTo",
+                      flex: 1,
+                      margin: "0 0 0 5",
+                      minValue: 0,
+                      emptyText: "Edge Weight To",
+                      disabled: true,
+                      allowDecimals: false,
+                    },
+                  ],
+                },
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
+                    type: "hbox",
+                    align: "stretch",
+                  },
+                  items: [
+                    {
+                      xtype: "numberfield",
+                      name: "VertexCountRangeFrom",
+                      flex: 1,
+                      margin: "0 5 0 0",
+                      minValue: 0,
+                      emptyText: "Vertex Count Range From",
+                      allowDecimals: false,
+                    },
+                    {
+                      xtype: "numberfield",
+                      name: "VertexCountRangeTo",
+                      flex: 1,
+                      margin: "0 0 0 5",
+                      minValue: 0,
+                      emptyText: "Vertex Count Range To",
+                      allowDecimals: false,
+                    },
+                  ],
+                },
+                {
+                  xtype: "container",
+                  anchor: "50%",
+                  margin: "10 10 10 10",
+                  layout: {
+                    type: "hbox",
+                    align: "stretch",
+                  },
+                  items: [
+                    {
+                      xtype: "numberfield",
+                      name: "MaximalChildren ",
+                      flex: 1,
+                      margin: "0 5 0 0",
+                      minValue: 0,
+                      emptyText: "Maximal Children ",
+                      allowDecimals: false,
+                    },
+                  ],
+                },
+                {
+                  xtype: "container",
+                  margin: "10 10 10 10",
+                  layout: {
+                    type: "hbox",
+                    align: "stretch",
+                    pack: "center",
+                  },
+                  items: [
+                    {
+                      xtype: "button",
+                      margin: "10 10 10 10",
+                      text: "Generate",
+                      listeners: {
+                        click: "onGenerateClick",
+                      },
+                    },
+                  ],
+                },
+                {
+                  xtype: "textareafield",
+                  margin: "10 10 10 10",
+                  height: 300,
+                  anchor: "100%",
+                  name: "Answer",
+                  labelAlign: "top",
+                  fieldLabel: "Answer",
+                },
+              ],
             },
             {
-                xtype: 'checkboxfield',
-                name: 'EdgeWeighted',
-                labelWidth: 220,
-                fieldLabel: 'Edge Weighted',
-                labelStyle: "text-align:right;",
-                listeners: {
-                    change: function(el) {
-                        if(!    el.getValue()) {
-                            el.up('graphMainView').down('[name=EdgeWeightFrom]').disable();
-                            el.up('graphMainView').down('[name=EdgeWeightTo]').disable();
-                        } else {
-                            el.up('graphMainView').down('[name=EdgeWeightFrom]').enable();
-                            el.up('graphMainView').down('[name=EdgeWeightTo]').enable();
-                        }
-                    }
-                }
-            }, 
-            {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
-                },
-                items: [
-                    {
-                        xtype: 'numberfield',
-                        name: 'EdgeWeightFrom',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Edge Weight From',
-                        labelStyle: "text-align:right;",
-                        disabled: true,
-                        allowDecimals: false
-                    },
-                    {
-                        xtype: 'numberfield',
-                        name: 'EdgeWeightTo',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Edge Weight To',
-                        labelStyle: "text-align:right;",
-                        disabled: true,
-                        allowDecimals: false
-                    }
-                ]
-            }, 
-            {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
-                },
-                items: [
-                    {
-                        xtype: 'numberfield',
-                        name: 'VertexCountRangeFrom',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Vertex Count Range From',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
-                    },
-                    {
-                        xtype: 'numberfield',
-                        name: 'VertexCountRangeTo',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Vertex Count Range To',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
-                    }
-                ]
-            }, 
-            {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
-                },
-                items: [
-                    {
-                        xtype: 'numberfield',
-                        name: 'MaximalChildren ',
-                        labelWidth: 220,
-                        minValue: 0,
-                        fieldLabel: 'Maximal Children ',
-                        labelStyle: "text-align:right;",
-                        allowDecimals: false
-                    }
-                ]
-            }, {
-                xtype: "container",
-                margin: "10 10 10 0",
-                layout: {
-                    type: "hbox",
-                    align: "stretch"
-                },
-                items: [{
-                    xtype: 'button',
-                    margin: "10 10 10 220",
-                    text: 'Generate',
-                    listeners: {
-                        click: 'onGenerateClick'
-                    }
-                }]
-            }]
+              xtype: "textareafield",
+              margin: "10 10 10 10",
+              height: 300,
+              flex: 1,
+              name: "Code",
+              emptyText: "YourCodeHere",
+            },
+          ],
+        },
+      ],
+    });
 
-        });
-
-        this.callParent();
-    }
+    this.callParent();
+  },
 });
