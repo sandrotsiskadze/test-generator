@@ -49,6 +49,7 @@ Ext.define('test.controllers.MainController', {
         var path = this.fnGetPathForXtype(form.xtype);
 
         Helpers.ajaxRequest(path, values, function(result){
+            form.down("[name=Answer]").setValue(result);
         }, 
         function(result) {
         });
