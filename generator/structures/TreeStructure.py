@@ -20,10 +20,6 @@ class TreeStructure:
         maximal_children_count = random.randint(0, self.maximal_children_count)
         vertex_count = random.randint(
             self.vertex_count_range[0], self.vertex_count_range[1])
-        return self.generate_tree(maximal_children_count, vertex_count)
-
-    def generate_tree(self, maximal_children_count, vertex_count):
-        result = []
         if self.connected:
             t = self.connected_tree(maximal_children_count, vertex_count)
         elif self.binary:
@@ -36,9 +32,8 @@ class TreeStructure:
             t = self.add_weight_to_nodes(t)
         if self.edge_weighted:
             t = self.add_weight_to_edges(t)
-        result = list(t.edges.data())
 
-        return result
+        return t
 
     def default_tree(self, maximal_children_count, vertex_count):
         return []

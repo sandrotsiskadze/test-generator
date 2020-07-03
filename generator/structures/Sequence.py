@@ -14,28 +14,24 @@ class Sequence:
     def get_sequence(self):
         element_count = random.randint(
             self.element_count_range[0], self.element_count_range[1])
-        return self.generate_sequence(element_count)
+        if self.permutation:
+            seq = self.generate_permution()
+        else:
+            seq = self.generate_sequence(element_count)
+        queries = []
+        if self.query:
+            queries = self.generate_queries(
+                self.permutation_number if self.permutation else element_count)
+        return (seq, queries)
 
     def generate_sequence(self, element_count):
-        result = []
-        if self.permutation:
-            seq = self.permute()
-        else:
-            seq = self.sequence(element_count)
-        if self.query:
-            print(self.queries(
-                self.permutation_number if self.permutation else element_count))
-        result = seq
-        return result
-
-    def sequence(self, element_count):
         result = []
         for _ in range(element_count):
             result.append(random.randint(
                 self.element_value_range[0], self.element_value_range[1]))
         return result
 
-    def permute(self):
+    def generate_permution(self):
         result = []
         nums = list(range(1, self.permutation_number + 1))
         for _ in range(self.permutation_number):
@@ -48,6 +44,6 @@ class Sequence:
                 del nums[x]
         return result
 
-    def queries(self, element_count):
+    def generate_queries(self, element_count):
         g = nx.gnm_random_graph(element_count, self.query_count)
         return g.edges
