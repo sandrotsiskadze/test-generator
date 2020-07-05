@@ -9,5 +9,6 @@ urlpatterns = [
     path('flow_network/', views.flow_network, name='flow_network'),
     path('sequence/', views.sequence, name='sequence'),
     path('maze/', views.maze, name='maze'),
-    path('string/', views.string_, name='string')
+    path('string/', views.string_, name='string'),
+    path('code/', views.code, name='code')
 ]

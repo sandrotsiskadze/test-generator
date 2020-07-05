@@ -14,6 +14,8 @@ from .structures import String as st
 
 # Create your views here.
 
+result = []
+
 
 @csrf_exempt
 def graph(request):
@@ -22,6 +24,7 @@ def graph(request):
     loop = False
     connected = False
     acyclic = False
+    one_cycle = False
     complete = False
     bipartite = False
     vertex_weighted = False
@@ -45,29 +48,35 @@ def graph(request):
         elif mydata['GraphKind'] == 3:
             acyclic = True
         elif mydata['GraphKind'] == 4:
-            complete = True
+            one_cycle = True
         elif mydata['GraphKind'] == 5:
+            complete = True
+        elif mydata['GraphKind'] == 6:
             bipartite = True
     if 'VertexWeighted' in mydata:
         if mydata['VertexWeighted'] == 'on':
             vertex_weighted = True
     if 'VertexWeightFrom' in mydata and 'VertexWeightTo' in mydata:
-        vertex_weight_range = (
-            int(mydata['VertexWeightFrom']), int(mydata['VertexWeightTo']))
+        if mydata['VertexWeightFrom'] and mydata['VertexWeightTo']:
+            vertex_weight_range = (
+                int(mydata['VertexWeightFrom']), int(mydata['VertexWeightTo']))
     if 'EdgeWeighted' in mydata:
         if mydata['EdgeWeighted'] == 'on':
             edge_weighted = True
     if 'EdgeWeightFrom' in mydata and 'EdgeWeightTo' in mydata:
-        edge_weight_range = (
-            int(mydata['EdgeWeightFrom']), int(mydata['EdgeWeightTo']))
+        if mydata['EdgeWeightFrom'] and mydata['EdgeWeightTo']:
+            edge_weight_range = (
+                int(mydata['EdgeWeightFrom']), int(mydata['EdgeWeightTo']))
     if 'VertexCountRangeFrom' in mydata and 'VertexCountRangeTo' in mydata:
-        vertex_count_range = (int(mydata['VertexCountRangeFrom']), int(
-            mydata['VertexCountRangeTo']))
+        if mydata['VertexCountRangeFrom'] and mydata['VertexCountRangeTo']:
+            vertex_count_range = (int(mydata['VertexCountRangeFrom']), int(
+                mydata['VertexCountRangeTo']))
     if 'EdgeCountRangeFrom' in mydata and 'EdgeCountRangeTo' in mydata:
-        edge_count_range = (int(mydata['EdgeCountRangeFrom']), int(
-            mydata['EdgeCountRangeTo']))
+        if mydata['EdgeCountRangeFrom'] and mydata['EdgeCountRangeTo']:
+            edge_count_range = (int(mydata['EdgeCountRangeFrom']), int(
+                mydata['EdgeCountRangeTo']))
 
-    g = gr.GraphStructure(directed, connected, acyclic, complete, bipartite, loop, multi, vertex_weighted,
+    g = gr.GraphStructure(directed, connected, acyclic, one_cycle, complete, bipartite, loop, multi, vertex_weighted,
                           vertex_weight_range, edge_weighted, edge_weight_range, vertex_count_range, edge_count_range)
     res = g.get_graph()
 
@@ -80,6 +89,9 @@ def graph(request):
         edges = list(res.edges.data('weight'))
     else:
         edges = list(res.edges)
+
+    global result
+    result = edges
 
     response = ''
     response += str(nx.number_of_nodes(res)) + '\n'
@@ -120,19 +132,23 @@ def tree(request):
         if mydata['VertexWeighted'] == 'on':
             vertex_weighted = True
     if 'VertexWeightFrom' in mydata and 'VertexWeightTo' in mydata:
-        vertex_weight_range = (
-            int(mydata['VertexWeightFrom']), int(mydata['VertexWeightTo']))
+        if mydata['VertexWeightFrom'] and mydata['VertexWeightTo']:
+            vertex_weight_range = (
+                int(mydata['VertexWeightFrom']), int(mydata['VertexWeightTo']))
     if 'EdgeWeighted' in mydata:
         if mydata['EdgeWeighted'] == 'on':
             edge_weighted = True
     if 'EdgeWeightFrom' in mydata and 'EdgeWeightTo' in mydata:
-        edge_weight_range = (
-            int(mydata['EdgeWeightFrom']), int(mydata['EdgeWeightTo']))
+        if mydata['EdgeWeightFrom'] and mydata['EdgeWeightTo']:
+            edge_weight_range = (
+                int(mydata['EdgeWeightFrom']), int(mydata['EdgeWeightTo']))
     if 'VertexCountRangeFrom' in mydata and 'VertexCountRangeTo' in mydata:
-        vertex_count_range = (int(mydata['VertexCountRangeFrom']), int(
-            mydata['VertexCountRangeTo']))
+        if mydata['VertexCountRangeFrom'] and mydata['VertexCountRangeTo']:
+            vertex_count_range = (int(mydata['VertexCountRangeFrom']), int(
+                mydata['VertexCountRangeTo']))
     if 'MaximalChildren' in mydata:
-        maximal_children_count = int(mydata['MaximalChildren'])
+        if mydata['MaximalChildren']:
+            maximal_children_count = int(mydata['MaximalChildren'])
 
     t = tr.TreeStructure(array, connected, binary, balanced, vertex_weighted, vertex_weight_range, edge_weighted, edge_weight_range,
                          maximal_children_count, vertex_count_range)
@@ -147,6 +163,9 @@ def tree(request):
         edges = list(res.edges.data('weight'))
     else:
         edges = list(res.edges)
+
+    global result
+    result = edges
 
     response = ''
     response += str(nx.number_of_nodes(res)) + '\n'
@@ -167,18 +186,24 @@ def flow_network(request):
     dict_str = request.body.decode("UTF-8")
     mydata = ast.literal_eval(dict_str)
     if 'VertexCountRangeFrom' in mydata and 'VertexCountRangeTo' in mydata:
-        vertex_count_range = (int(mydata['VertexCountRangeFrom']), int(
-            mydata['VertexCountRangeTo']))
+        if mydata['VertexCountRangeFrom'] and mydata['VertexCountRangeTo']:
+            vertex_count_range = (int(mydata['VertexCountRangeFrom']), int(
+                mydata['VertexCountRangeTo']))
     if 'EdgeCountRangeFrom' in mydata and 'EdgeCountRangeTo' in mydata:
-        edge_count_range = (int(mydata['EdgeCountRangeFrom']), int(
-            mydata['EdgeCountRangeTo']))
+        if mydata['EdgeCountRangeFrom'] and mydata['EdgeCountRangeTo']:
+            edge_count_range = (int(mydata['EdgeCountRangeFrom']), int(
+                mydata['EdgeCountRangeTo']))
     if 'MaximalWeight' in mydata:
-        capacity_range = (0, int(mydata['MaximalWeight']))
+        if mydata['MaximalWeight']:
+            capacity_range = (0, int(mydata['MaximalWeight']))
 
     f = fn.FlowNetwork(capacity_range, vertex_count_range, edge_count_range)
     res = f.get_flow_network()
 
     edges = list(res[2].edges.data('weight'))
+
+    global result
+    result = edges
 
     response = ''
     response += str(nx.number_of_nodes(res[2])) + '\n'
@@ -201,24 +226,31 @@ def sequence(request):
     dict_str = request.body.decode("UTF-8")
     mydata = ast.literal_eval(dict_str)
     if 'ElementCountRangeFrom' in mydata and 'ElementCountRangeTo' in mydata:
-        element_count_range = (int(mydata['ElementCountRangeFrom']), int(
-            mydata['ElementCountRangeTo']))
+        if mydata['ElementCountRangeFrom'] and mydata['ElementCountRangeTo']:
+            element_count_range = (int(mydata['ElementCountRangeFrom']), int(
+                mydata['ElementCountRangeTo']))
     if 'ElementValueRangeFrom' in mydata and 'ElementValueRangeTo' in mydata:
-        element_value_range = (int(mydata['ElementValueRangeFrom']), int(
-            mydata['ElementValueRangeTo']))
+        if mydata['ElementValueRangeFrom'] and mydata['ElementValueRangeTo']:
+            element_value_range = (int(mydata['ElementValueRangeFrom']), int(
+                mydata['ElementValueRangeTo']))
     if 'Permutation' in mydata:
         if mydata['Permutation'] == 'on':
             permutation = True
     if 'PermutationNumber' in mydata:
-        permutation_number = int(mydata['PermutationNumber'])
+        if mydata['PermutationNumber']:
+            permutation_number = int(mydata['PermutationNumber'])
     if 'Query' in mydata:
         query = True
     if 'QueryCount' in mydata:
-        query_count = int(mydata['QueryCount'])
+        if mydata['QueryCount']:
+            query_count = int(mydata['QueryCount'])
 
     s = sq.Sequence(element_count_range, element_value_range,
                     permutation, permutation_number, query, query_count)
     res = s.get_sequence()
+
+    global result
+    result = res[0]
 
     response = ''
     response += str(len(res[0])) + '\n'
@@ -234,7 +266,40 @@ def sequence(request):
 
 @csrf_exempt
 def maze(request):
-    return HttpResponse('')
+    width_range = (0, 10)
+    height_range = (0, 10)
+    path_symbol = 'O'
+    wall_symbol = 'X'
+    connected = False
+    dict_str = request.body.decode("UTF-8")
+    mydata = ast.literal_eval(dict_str)
+    if 'DimensionX' in mydata:
+        if mydata['DimensionX']:
+            height_range = (0, int(mydata['DimensionX']))
+    if 'DimensionY' in mydata:
+        if mydata['DimensionY']:
+            width_range = (0, int(mydata['DimensionY']))
+    if 'WallCharacter' in mydata:
+        if mydata['WallCharacter']:
+            wall_symbol = mydata['WallCharacter']
+    if 'PathCharacter' in mydata:
+        if mydata['PathCharacter']:
+            path_symbol = mydata['PathCharacter']
+    if 'Connected' in mydata:
+        if mydata['Connected'] == 'on':
+            connected = True
+
+    m = mz.Maze(width_range, height_range, path_symbol, wall_symbol, connected)
+    res = m.get_maze()
+
+    global result
+    result = res
+
+    response = ''
+    for i in range(len(res)):
+        response += str(res[i]).strip('[]').replace(',', '') + '\n'
+
+    return HttpResponse(response)
 
 
 @csrf_exempt
@@ -244,8 +309,9 @@ def string_(request):
     dict_str = request.body.decode("UTF-8")
     mydata = ast.literal_eval(dict_str)
     if 'ElementCountRangeFrom' in mydata and 'ElementCountRangeTo' in mydata:
-        element_count_range = (int(mydata['ElementCountRangeFrom']), int(
-            mydata['ElementCountRangeTo']))
+        if mydata['ElementCountRangeFrom'] and mydata['ElementCountRangeTo']:
+            element_count_range = (int(mydata['ElementCountRangeFrom']), int(
+                mydata['ElementCountRangeTo']))
     if 'Alphabet' in mydata:
         if mydata['Alphabet']:
             alphabet = mydata['Alphabet']
@@ -253,13 +319,25 @@ def string_(request):
     s = st.String(element_count_range, alphabet)
     res = s.get_string()
 
+    global result
+    result = res
+
     response = ''
     response += str(len(res[0])) + '\n'
     response += res[0] + '\n'
     response += str(len(res[1])) + '\n'
     response += res[1] + '\n'
-    
+
     return HttpResponse(response)
+
+
+@csrf_exempt
+def code(request):
+    code = "def sandro(x):\n\treturn x**2"
+    code_obj = compile(code, '<string>', 'exec')
+    new_func = types.FunctionType(code_obj.co_consts[0], globals())
+    print(list(map(new_func, result)))
+    return HttpResponse('')
 
 
 def index(request):

@@ -3,12 +3,13 @@ import random
 
 
 class GraphStructure:
-    def __init__(self, directed=False, connected=False, acyclic=False, complete=False, bipartite=False, loop=False, multi=False,
+    def __init__(self, directed=False, connected=False, acyclic=False, one_cycle=False, complete=False, bipartite=False, loop=False, multi=False,
                  vertex_weighted=False, vertex_weight_range=(0, 10), edge_weighted=False, edge_weight_range=(0, 10),
                  vertex_count_range=(0, 10), edge_count_range=(0, 10)):
         self.directed = directed
         self.connected = connected
         self.acyclic = acyclic
+        self.one_cycle = one_cycle
         self.complete = complete
         self.loop = loop
         self.multi = multi
@@ -31,8 +32,9 @@ class GraphStructure:
             edge_count = random.randint(
                 vertex_count - 1, self.edge_count_range[1])
             g = self.acyclic_graph(vertex_count, edge_count)
+        elif self.one_cycle:
+            g = self.one_cycle_graph(vertex_count)
         elif self.complete:
-            edge_count = (vertex_count * (vertex_count - 1))/2
             g = self.complete_graph(vertex_count)
         elif self.bipartite:
             edge_count = random.randint(
@@ -96,6 +98,10 @@ class GraphStructure:
             nodes[x] = nodes[len(nodes) - 1]
             nodes[len(nodes) - 1] = tmp
             g.add_edge(max(x_val, y_val), min(x_val, y_val))
+        return g
+
+    def one_cycle_graph(self, vertex_count):
+        g = self.connected_graph(vertex_count, vertex_count)
         return g
 
     def complete_graph(self, vertex_count):

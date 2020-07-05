@@ -36,9 +36,23 @@ class TreeStructure:
         return t
 
     def default_tree(self, maximal_children_count, vertex_count):
-        return []
+        counter = 0
+        tmp_vertex_count = random.randint(0, vertex_count - counter)
+        t = self.connected_tree(maximal_children_count, tmp_vertex_count)
+        counter += tmp_vertex_count
+        while counter < vertex_count:
+            tmp_vertex_count = random.randint(0, vertex_count - counter)
+            t_tmp = self.connected_tree(
+                maximal_children_count, tmp_vertex_count)
+            counter += tmp_vertex_count
+            t = nx.disjoint_union(t, t_tmp)
+        return t
 
     def connected_tree(self, maximal_children_count, vertex_count):
+        if vertex_count <= 1:
+            t = nx.Graph()
+            t.add_node(1)
+            return t
         degree_sequence = [1] * vertex_count
         degree_sum = 2 * (vertex_count - 1) - vertex_count
         i = 0
