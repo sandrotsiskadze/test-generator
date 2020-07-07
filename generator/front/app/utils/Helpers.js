@@ -8,10 +8,10 @@ Ext.define('test.utils.Helpers', {
             method: "Post",
             timeout: 90000,
             success: function (result) {
-                succAction(resultObj.Result);
+                succAction(result.Result);
             },
             failure: function (result) {
-                if (!Ext.isEmpty(failAction)) failAction();
+                if (!Ext.isEmpty(failAction)) failAction(result.Result);
             },
             jsonData: params
         });

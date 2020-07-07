@@ -24,34 +24,48 @@ Ext.define('test.controllers.MainController', {
     },
     
     fnGetPathForXtype(xtype) {
-        if(xtype == "flowNetworkMainView") 
+        if(xtype == "FlowNetworkMainView") 
             return "Generate/FlowNetwork";
             
-        if(xtype == "graphMainView") 
+        if(xtype == "GraphMainView") 
             return "Generate/Graph";
 
-        if(xtype == "mazeMainView") 
+        if(xtype == "MazeMainView") 
             return "Generate/Maze";
 
-        if(xtype == "sequenceMainView") 
+        if(xtype == "SequenceMainView") 
             return "Generate/Sequence";
 
-        if(xtype == "stringMainView") 
+        if(xtype == "StringMainView") 
             return "Generate/String";
 
-        if(xtype == "treeMainView") 
+        if(xtype == "TreeMainView") 
             return "Generate/Tree";
     },
     
     onGenerateClick: function(el) {
         var form = el.up('form');
         var values = form.getValues();
-        var path = this.fnGetPathForXtype(form.xtype);
+        var path = this.fnGetPathForXtype(form.name);
 
-        Helpers.ajaxRequest(path, values, function(result){
-            form.down("[name=Answer]").setValue(result);
-        }, 
-        function(result) {
-        });
+        if(form.isValid()) {
+            Helpers.ajaxRequest(path, values, function(result){
+                form.down("[name=Answer]").setValue(result);
+            }, 
+            function(result) {
+            });
+        }
+    },
+    onCodeSendClick: function(el) {
+        var form = el.up("form");
+        var values = form.getValues();
+        
+        if(form.isValid()) {
+            Helpers.ajaxRequest("path", values, function(result){
+                form.down("[name=UserAnswer]").setValue(result);
+            }, 
+            function(result) {
+            });
+        }
     }
 });
