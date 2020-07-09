@@ -34,6 +34,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                         {
                           xtype: "numberfield",
                           name: "ElementCountRangeFrom",
+                          langIdentifier:"ElementCountRangeFrom",
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
@@ -43,6 +44,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                         {
                           xtype: "numberfield",
                           name: "ElementCountRangeTo",
+                          langIdentifier:"ElementCountRangeTo",
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
@@ -62,6 +64,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                       items: [
                         {
                           xtype: "textfield",
+                          langIdentifier:"Alphabet",
                           name: "Alphabet",
                           flex: 1,
                           margin: "0 5 0 0",
@@ -83,6 +86,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                           xtype: "button",
                           margin: "10 10 10 10",
                           text: "Generate",
+                          langIdentifier:"Generate",
                           listeners: {
                             click: "onGenerateClick",
                           },
@@ -95,6 +99,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                       height: 300,
                       anchor: "100%",
                       name: "Answer",
+                      langIdentifier:"Answer",
                       labelAlign: "top",
                       fieldLabel: "Answer",
                     },

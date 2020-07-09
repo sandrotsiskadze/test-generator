@@ -35,7 +35,8 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           xtype: "combobox",
                           flex: 1,
                           margin: "0 5 0 0",
-                          emptyText: "დასახელება",
+                          langIdentifier:"CallName",
+                          emptyText: "CallName",
                           displayField: "name",
                           valueField: "id",
                           store: Ext.create("Ext.data.Store", {
@@ -72,6 +73,8 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "checkboxfield",
                           name: "ArrayBased",
+                          labelWidth: "150px",
+                          langIdentifier:"ArrayBased",
                           flex: 1,
                           margin: "0 0 0 5",
                           fieldLabel: "Array Based",
@@ -81,9 +84,11 @@ Ext.define("test.view.main.Main.TreeMainView", {
                     },
                     {
                       xtype: "checkboxfield",
-                      name: "VertexWeighted",
+                      name: "WeightedVertex",
+                      langIdentifier:"WeightedVertex",
                       flex: 1,
                       margin: "10 10 10 10",
+                      labelWidth: "150px",
                       fieldLabel: "Vertex Weighted",
                       labelStyle: "text-align:right;",
                       listeners: {
@@ -117,6 +122,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "numberfield",
                           name: "VertexWeightFrom",
+                          langIdentifier:"VertexWeightFrom",
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
@@ -127,6 +133,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "numberfield",
                           name: "VertexWeightTo",
+                          langIdentifier:"VertexWeightTo",
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
@@ -139,8 +146,10 @@ Ext.define("test.view.main.Main.TreeMainView", {
                     {
                       xtype: "checkboxfield",
                       name: "EdgeWeighted",
+                      langIdentifier:"EdgeWeighted",
                       margin: "10 10 10 10",
                       flex: 1,
+                      labelWidth: "150px",
                       fieldLabel: "Edge Weighted",
                       labelStyle: "text-align:right;",
                       listeners: {
@@ -174,6 +183,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "numberfield",
                           name: "EdgeWeightFrom",
+                          langIdentifier:"EdgeWeightFrom",
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
@@ -184,6 +194,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "numberfield",
                           name: "EdgeWeightTo",
+                          langIdentifier:"EdgeWeightTo",
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
@@ -204,6 +215,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "numberfield",
                           name: "VertexCountRangeFrom",
+                          langIdentifier:"VertexCountRangeFrom",
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
@@ -213,6 +225,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "numberfield",
                           name: "VertexCountRangeTo",
+                          langIdentifier:"VertexCountRangeTo",
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
@@ -224,7 +237,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                     {
                       xtype: "container",
                       anchor: "50%",
-                      margin: "10 10 10 10",
+                      margin: "10 5 10 10",
                       layout: {
                         type: "hbox",
                         align: "stretch",
@@ -232,9 +245,9 @@ Ext.define("test.view.main.Main.TreeMainView", {
                       items: [
                         {
                           xtype: "numberfield",
-                          name: "MaximalChildren ",
+                          name: "MaximalChildren",
+                          langIdentifier:"MaximalChildren",
                           flex: 1,
-                          margin: "0 5 0 0",
                           minValue: 0,
                           emptyText: "Maximal Children ",
                           allowDecimals: false,
@@ -253,6 +266,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "button",
                           margin: "10 10 10 10",
+                          langIdentifier:"Generate",
                           text: "Generate",
                           listeners: {
                             click: "onGenerateClick",
@@ -265,6 +279,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                       margin: "10 10 10 10",
                       height: 300,
                       anchor: "100%",
+                      langIdentifier:"Answer",
                       name: "Answer",
                       labelAlign: "top",
                       fieldLabel: "Answer",

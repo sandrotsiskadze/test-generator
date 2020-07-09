@@ -18,6 +18,7 @@ Ext.define("test.view.main.Main.CodeAreaMainView", {
                 height: 300,
                 flex: 1,
                 allowBlank: false,
+                langIdentifier: "UserCode",
                 name: "UserCode",
                 emptyText: "YourCodeHere",
               },
@@ -32,9 +33,10 @@ Ext.define("test.view.main.Main.CodeAreaMainView", {
                   {
                     xtype: "combobox",
                     name: "UserChoice",
+                    langIdentifier: "UserChoice",
                     allowBlank: false,
                     margin: "0 5 0 0",
-                    emptyText: "აირჩიეთ",
+                    emptyText: "Choose",
                     displayField: "name",
                     valueField: "id",
                     flex: 1,
@@ -71,6 +73,7 @@ Ext.define("test.view.main.Main.CodeAreaMainView", {
                   },
                   {
                     xtype: "button",
+                    langIdentifier: "Send",
                     text: "Send",
                     listeners: {
                       click: "onCodeSendClick",
@@ -84,6 +87,7 @@ Ext.define("test.view.main.Main.CodeAreaMainView", {
                 height: 300,
                 readonly: true,
                 flex: 1,
+                langIdentifier: "Send",
                 name: "UserAnswer",
                 emptyText: "CodeAnswer",
               },

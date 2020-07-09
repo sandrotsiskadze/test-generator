@@ -21,32 +21,72 @@ Ext.define('test.view.main.Main', {
     defaults: {
         bodyPadding: 20,
     },
+    initComponent: function () {
+        Ext.apply(this, {
+          border: false,
+          bodyPadding: 10,
+          dockedItems: [
+            {
+              xtype: "toolbar",
+              displayInfo: true,
+              items: [
+                {
+                  xtype: "button",
+                  text: "ქართული",
+                  width: "150px",
+                  language: "GEO",
+                  dock: "bottom",
+                  listeners: {
+                    click: "onLanguageChange",
+                  },
+                },
+                {
+                  xtype: "button",
+                  text: "English",
+                  width: "150px",
+                  language: "ENG",
+                  dock: "bottom",
+                  listeners: {
+                    click: "onLanguageChange",
+                  },
+                },
+              ],
+            },
+          ],
+          items: [
+            {
+              xtype: "graphMainView",
+              title: "Graph",
+            },
+            {
+              xtype: "treeMainView",
+              title: "Tree",
+            },
+            {
+              xtype: "flowNetworkMainView",
+              title: "Flow Network",
+            },
+            {
+              xtype: "sequenceMainView",
+              title: "Sequence",
+            },
+            {
+              xtype: "mazeMainView",
+              title: "Maze",
+            },
+            {
+              xtype: "stringMainView",
+              title: "String",
+            },
+          ],
+        });
 
-    items: [
-        {
-            xtype: "graphMainView",
-            title: "Graph"
+        var value = Helpers.getCookie("language");
 
-        }, 
-        {
-            xtype: "treeMainView",
-            title: "Tree"
-        }, 
-        {
-            xtype: "flowNetworkMainView",
-            title: "Flow Network"
-        }, 
-        {
-            xtype: "sequenceMainView",
-            title: "Sequence"
-        }, 
-        {
-            xtype: "mazeMainView",
-            title: "Maze"
-        }, 
-        {
-            xtype: "stringMainView",
-            title: "String"
-        }
-    ]
+        if(Ext.isEmpty(value)) 
+            var value = Helpers.setCookie("language", "GEO");
+        
+        this.callParent();
+        Helpers.setLanguage(this);
+  },
 });

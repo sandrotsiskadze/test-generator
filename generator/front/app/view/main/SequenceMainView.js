@@ -34,6 +34,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                         {
                           xtype: "numberfield",
                           name: "ElementCountRangeFrom",
+                          langIdentifier:"ElementCountRangeFrom",
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
@@ -43,6 +44,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                         {
                           xtype: "numberfield",
                           name: "ElementCountRangeTo",
+                          langIdentifier:"ElementCountRangeTo",
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
@@ -62,6 +64,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                         {
                           xtype: "numberfield",
                           name: "ElementValueRangeFrom",
+                          langIdentifier:"ElementValueRangeFrom",
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
@@ -71,6 +74,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                         {
                           xtype: "numberfield",
                           name: "ElementValueRangeTo",
+                          langIdentifier:"ElementValueRangeTo",
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
@@ -89,6 +93,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                       items: [
                         {
                           xtype: "checkboxfield",
+                          langIdentifier:"Permutation",
                           name: "Permutation",
                           flex: 1,
                           margin: "0 5 0 ",
@@ -111,6 +116,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                         {
                           xtype: "numberfield",
                           name: "PermutationNumber",
+                          langIdentifier:"PermutationNumber",
                           flex: 1,
                           margin: "0 0 0 5",
                           disabled: true,
@@ -131,6 +137,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                         {
                           xtype: "checkboxfield",
                           name: "Query",
+                          langIdentifier:"Query",
                           flex: 1,
                           margin: "0 5 0 0",
                           fieldLabel: "Query",
@@ -152,6 +159,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                         {
                           xtype: "numberfield",
                           name: "QueryCount",
+                          langIdentifier:"QueryCount",
                           flex: 1,
                           margin: "0 0 0 5",
                           disabled: true,
@@ -173,6 +181,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                         {
                           xtype: "button",
                           margin: "10 10 10 10",
+                          langIdentifier:"Generate",
                           text: "Generate",
                           listeners: {
                             click: "onGenerateClick",
@@ -185,6 +194,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                       margin: "10 10 10 10",
                       height: 300,
                       anchor: "100%",
+                      langIdentifier:"Answer",
                       name: "Answer",
                       labelAlign: "top",
                       fieldLabel: "Answer",

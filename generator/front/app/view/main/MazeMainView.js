@@ -33,6 +33,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                       items: [
                         {
                           xtype: "numberfield",
+                          langIdentifier: "DimensionX",
                           name: "DimensionX",
                           flex: 1,
                           margin: "0 5 0 0",
@@ -43,6 +44,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                         },
                         {
                           xtype: "numberfield",
+                          langIdentifier: "DimensionY",
                           name: "DimensionY",
                           flex: 1,
                           margin: "0 0 0 5",
@@ -63,6 +65,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                       items: [
                         {
                           xtype: "textfield",
+                          langIdentifier: "WallCharacter",
                           name: "WallCharacter",
                           flex: 1,
                           margin: "0 5 0 0",
@@ -73,6 +76,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                         },
                         {
                           xtype: "textfield",
+                          langIdentifier: "PathCharacter",
                           name: "PathCharacter",
                           flex: 1,
                           margin: "0 0 0 5",
@@ -94,6 +98,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                         {
                           xtype: "checkboxfield",
                           name: "Connected",
+                          langIdentifier: "Connected",
                           labelStyle: "text-align:right;",
                           fieldLabel: "Connected",
                         },
@@ -111,6 +116,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                         {
                           xtype: "button",
                           margin: "10 10 10 10",
+                          langIdentifier: "Generate",
                           text: "Generate",
                           listeners: {
                             click: "onGenerateClick",
@@ -123,6 +129,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                       margin: "10 10 10 10",
                       height: 300,
                       anchor: "100%",
+                      langIdentifier: "Answer",
                       name: "Answer",
                       labelAlign: "top",
                       fieldLabel: "Answer",

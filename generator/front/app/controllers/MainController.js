@@ -67,5 +67,16 @@ Ext.define('test.controllers.MainController', {
             function(result) {
             });
         }
+    },
+    onLanguageChange: function(cmp) {
+        var language = cmp.language;
+
+        debugger
+        if(Helpers.getCookie("language") != language) {
+            Helpers.setCookie("language", language);
+            window.location.reload();
+            history.go(0);
+            window.location.href=window.location.href;
+        }
     }
 });
