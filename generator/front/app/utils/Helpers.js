@@ -24,7 +24,6 @@ Ext.define('test.utils.Helpers', {
         return Ext.util.Cookies.get(key);
     },
     setLanguage: function (parentContainer) {
-        debugger
         Ext.each(parentContainer.query('field'), function (cmp) {
             var langIdentifier = cmp.langIdentifier;
             if(!Ext.isEmpty(langIdentifier)) {

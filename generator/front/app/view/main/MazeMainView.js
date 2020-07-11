@@ -41,6 +41,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           minValue: 0,
                           emptyText: "Dimension-X From",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                         {
                           xtype: "numberfield",
@@ -52,6 +53,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           minValue: 0,
                           emptyText: "Dimension-X To",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                       ],
                     },
@@ -73,6 +75,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           minValue: 0,
                           emptyText: "Dimension-Y From",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                         {
                           xtype: "numberfield",
@@ -84,6 +87,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           minValue: 0,
                           emptyText: "Dimension-Y To",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                       ],
                     },
@@ -105,6 +109,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           maskRe: /[A-Za-z]/,
                           maxLength: 1,
                           emptyText: "Wall Character",
+                          allowBlank: false,
                         },
                         {
                           xtype: "textfield",
@@ -116,6 +121,7 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           maskRe: /[A-Za-z]/,
                           maxLength: 1,
                           emptyText: "Path Character",
+                          allowBlank: false,
                         },
                       ],
                     },

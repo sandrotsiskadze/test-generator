@@ -40,6 +40,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                           minValue: 0,
                           emptyText: "Element Count Range From",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                         {
                           xtype: "numberfield",
@@ -50,6 +51,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                           minValue: 0,
                           emptyText: "Element Count Range To",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                       ],
                     },
@@ -70,6 +72,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                           margin: "0 5 0 0",
                           minValue: 0,
                           emptyText: "Alphabet",
+                          allowBlank: false,
                         },
                       ],
                     },

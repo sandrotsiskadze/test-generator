@@ -69,6 +69,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                               },
                             ],
                           }),
+                          allowBlank: false,
                         },
                         {
                           xtype: "checkboxfield",
@@ -79,6 +80,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           margin: "0 0 0 5",
                           fieldLabel: "Array Based",
                           labelStyle: "text-align:right;",
+                          allowBlank: false,
                         },
                       ],
                     },
@@ -129,6 +131,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           emptyText: "Vertex Weight From",
                           disabled: true,
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                         {
                           xtype: "numberfield",
@@ -140,6 +143,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           emptyText: "Vertex Weight To",
                           disabled: true,
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                       ],
                     },
@@ -155,17 +159,17 @@ Ext.define("test.view.main.Main.TreeMainView", {
                       listeners: {
                         change: function (el) {
                           if (!el.getValue()) {
-                            el.up("graphMainView")
+                            el.up("treeMainView")
                               .down("[name=EdgeWeightFrom]")
                               .disable();
-                            el.up("graphMainView")
+                            el.up("treeMainView")
                               .down("[name=EdgeWeightTo]")
                               .disable();
                           } else {
-                            el.up("graphMainView")
+                            el.up("treeMainView")
                               .down("[name=EdgeWeightFrom]")
                               .enable();
-                            el.up("graphMainView")
+                            el.up("treeMainView")
                               .down("[name=EdgeWeightTo]")
                               .enable();
                           }
@@ -190,6 +194,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           emptyText: "Edge Weight From",
                           disabled: true,
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                         {
                           xtype: "numberfield",
@@ -201,6 +206,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           emptyText: "Edge Weight To",
                           disabled: true,
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                       ],
                     },
@@ -221,6 +227,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           minValue: 0,
                           emptyText: "Vertex Count Range From",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                         {
                           xtype: "numberfield",
@@ -231,6 +238,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           minValue: 0,
                           emptyText: "Vertex Count Range To",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                       ],
                     },
@@ -251,6 +259,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           minValue: 0,
                           emptyText: "Maximal Children ",
                           allowDecimals: false,
+                          allowBlank: false,
                         },
                       ],
                     },
