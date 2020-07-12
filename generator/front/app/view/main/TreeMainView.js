@@ -135,11 +135,19 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           langIdentifier:"VertexWeightFrom",
                           flex: 1,
                           margin: "0 5 0 0",
-                          minValue: 0,
+                          minValue: -1000000,
+                          maxValue: 1000000,
                           emptyText: "Vertex Weight From",
                           disabled: true,
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("treeMainView")
+                                .down("[name=VertexWeightTo]")
+                                .minValue=el.getValue();
+                            },
+                          },
                         },
                         {
                           xtype: "numberfield",
@@ -147,11 +155,19 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           langIdentifier:"VertexWeightTo",
                           flex: 1,
                           margin: "0 0 0 5",
-                          minValue: 0,
+                          minValue: -1000000,
+                          maxValue: 1000000,
                           emptyText: "Vertex Weight To",
                           disabled: true,
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("treeMainView")
+                                .down("[name=VertexWeightFrom]")
+                                .maxValue=el.getValue();
+                            },
+                          },
                         },
                       ],
                     },
@@ -198,11 +214,19 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           langIdentifier:"EdgeWeightFrom",
                           flex: 1,
                           margin: "0 5 0 0",
-                          minValue: 0,
+                          minValue: -1000000,
+                          maxValue: 1000000,
                           emptyText: "Edge Weight From",
                           disabled: true,
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("treeMainView")
+                                .down("[name=EdgeWeightTo]")
+                                .minValue=el.getValue();
+                            },
+                          },
                         },
                         {
                           xtype: "numberfield",
@@ -210,11 +234,19 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           langIdentifier:"EdgeWeightTo",
                           flex: 1,
                           margin: "0 0 0 5",
-                          minValue: 0,
+                          minValue: -1000000,
+                          maxValue: 1000000,
                           emptyText: "Edge Weight To",
                           disabled: true,
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("treeMainView")
+                                .down("[name=EdgeWeightFrom]")
+                                .maxValue=el.getValue();
+                            },
+                          },
                         },
                       ],
                     },
@@ -233,9 +265,17 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
+                          maxValue: 100000,
                           emptyText: "Vertex Count Range From",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("treeMainView")
+                                .down("[name=VertexCountRangeTo]")
+                                .minValue=el.getValue();
+                            },
+                          },
                         },
                         {
                           xtype: "numberfield",
@@ -244,9 +284,17 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
+                          maxValue: 100000,
                           emptyText: "Vertex Count Range To",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("treeMainView")
+                                .down("[name=VertexCountRangeFrom]")
+                                .maxValue=el.getValue();
+                            },
+                          },
                         },
                       ],
                     },
@@ -265,6 +313,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           langIdentifier:"MaximalChildren",
                           flex: 1,
                           minValue: 0,
+                          maxValue: 100000,
                           emptyText: "Maximal Children ",
                           allowDecimals: false,
                           allowBlank: false,

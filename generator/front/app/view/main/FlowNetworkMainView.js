@@ -46,9 +46,17 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "VertexCountRangeFrom",
                               name: "VertexCountRangeFrom",
                               minValue: 0,
+                              maxValue: 100000,
                               emptyText: "Vertex Count Range From",
                               allowDecimals: false,
                               allowBlank: false,
+                              listeners: {
+                                change: function(el) {
+                                  el.up("flowNetworkMainView")
+                                  .down("[name=VertexCountRangeTo]")
+                                  .minValue=el.getValue();
+                                },
+                              },
                             },
                             {
                               xtype: "numberfield",
@@ -57,10 +65,18 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "VertexCountRangeTo",
                               name: "VertexCountRangeTo",
                               minValue: 0,
+                              maxValue: 100000,
                               emptyText: "Vertex Count Range To",
                               labelStyle: "text-align:right;",
                               allowDecimals: false,
                               allowBlank: false,
+                              listeners: {
+                                change: function(el) {
+                                  el.up("flowNetworkMainView")
+                                  .down("[name=VertexCountRangeFrom]")
+                                  .maxValue=el.getValue();
+                                },
+                              },
                             },
                           ],
                         },
@@ -79,10 +95,18 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "EdgeCountRangeFrom",
                               name: "EdgeCountRangeFrom",
                               minValue: 0,
+                              maxValue: 100000,
                               emptyText: "Edge Count Range From",
                               labelStyle: "text-align:right;",
                               allowDecimals: false,
                               allowBlank: false,
+                              listeners: {
+                                change: function(el) {
+                                  el.up("flowNetworkMainView")
+                                  .down("[name=EdgeCountRangeTo]")
+                                  .minValue=el.getValue();
+                                },
+                              },
                             },
                             {
                               xtype: "numberfield",
@@ -91,10 +115,18 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "EdgeCountRangeTo",
                               name: "EdgeCountRangeTo",
                               minValue: 0,
+                              maxValue: 100000,
                               emptyText: "Edge Count Range From",
                               labelStyle: "text-align:right;",
                               allowDecimals: false,
                               allowBlank: false,
+                              listeners: {
+                                change: function(el) {
+                                  el.up("flowNetworkMainView")
+                                  .down("[name=EdgeCountRangeFrom]")
+                                  .minValue=el.getValue();
+                                },
+                              },
                             },
                           ],
                         },
@@ -113,6 +145,7 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "MaximalWeight",
                               name: "MaximalWeight",
                               minValue: 0,
+                              maxValue: 1000000,
                               emptyText: "Maximal Weight",
                               allowDecimals: false,
                               allowBlank: false,

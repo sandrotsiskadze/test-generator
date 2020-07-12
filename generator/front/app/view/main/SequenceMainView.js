@@ -38,9 +38,17 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
+                          maxValue: 1000000,
                           emptyText: "Element Count Range From",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("sequenceMainView")
+                                .down("[name=ElementCountRangeTo]")
+                                .minValue=el.getValue();
+                            },
+                          },
                         },
                         {
                           xtype: "numberfield",
@@ -49,9 +57,17 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
+                          maxValue: 1000000,
                           emptyText: "Element Count Range To",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("sequenceMainView")
+                                .down("[name=ElementCountRangeFrom]")
+                                .maxValue=el.getValue();
+                            },
+                          },
                         },
                       ],
                     },
@@ -69,10 +85,18 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                           langIdentifier:"ElementValueRangeFrom",
                           flex: 1,
                           margin: "0 5 0 0",
-                          minValue: 0,
+                          minValue: -1000000,
+                          maxValue: 1000000,
                           emptyText: "Element Value Range From",
                           allowDecimals: false,
-                          allowBlank: false, 
+                          allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("sequenceMainView")
+                                .down("[name=ElementValueRangeTo]")
+                                .minValue=el.getValue();
+                            },
+                          }, 
                         },
                         {
                           xtype: "numberfield",
@@ -80,10 +104,18 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                           langIdentifier:"ElementValueRangeTo",
                           flex: 1,
                           margin: "0 0 0 5",
-                          minValue: 0,
+                          minValue: -1000000,
+                          maxValue: 1000000,
                           emptyText: "Element Value Range From",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("sequenceMainView")
+                                .down("[name=ElementValueRangeFrom]")
+                                .maxValue=el.getValue();
+                            },
+                          },
                         },
                       ],
                     },
@@ -125,6 +157,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                           margin: "0 0 0 5",
                           disabled: true,
                           minValue: 0,
+                          maxValue: 1000000,
                           emptyText: "Permutation Number",
                           allowDecimals: false,
                           allowBlank: false,
@@ -169,6 +202,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                           margin: "0 0 0 5",
                           disabled: true,
                           minValue: 0,
+                          maxValue: 1000000,
                           emptyText: "Query Count",
                           allowDecimals: false,
                           allowBlank: false,

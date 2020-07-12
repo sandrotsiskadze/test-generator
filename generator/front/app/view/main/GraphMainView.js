@@ -179,12 +179,20 @@ Ext.define("test.view.main.Main.GraphMainView", {
                             margin: "0 5 0 0",
                             name: "VertexWeightFrom",
                             langIdentifier: "VertexWeightFrom",
-                            minValue: 0,
+                            minValue: -1000000,
+                            maxValue: 1000000,
                             flex: 1,
                             emptyText: "Vertex Weight From",
                             disabled: true,
                             allowDecimals: false,
                             allowBlank: false,
+                            listeners: {
+                              change: function (el) {
+                                el.up("graphMainView")
+                                  .down("[name=VertexWeightTo]")
+                                  .minValue=el.getValue();
+                              },
+                            },
                           },
                           {
                             xtype: "numberfield",
@@ -192,12 +200,20 @@ Ext.define("test.view.main.Main.GraphMainView", {
                             name: "VertexWeightTo",
                             langIdentifier: "VertexWeightTo",
                             labelWidth: 220,
-                            minValue: 0,
+                            minValue: -1000000,
+                            maxValue: 1000000,
                             flex: 1,
                             emptyText: "Vertex Weight To",
                             disabled: true,
                             allowDecimals: false,
                             allowBlank: false,
+                            listeners: {
+                              change: function (el) {
+                                el.up("graphMainView")
+                                  .down("[name=VertexWeightFrom]")
+                                  .maxValue=el.getValue();
+                              },
+                            },
                           },
                         ],
                       },
@@ -243,11 +259,19 @@ Ext.define("test.view.main.Main.GraphMainView", {
                             margin: "0 5 0 0",
                             name: "EdgeWeightFrom",
                             langIdentifier: "EdgeWeightFrom",
-                            minValue: 0,
+                            minValue: -1000000,
+                            maxValue: 1000000,
                             emptyText: "Edge Weight From",
                             disabled: true,
                             allowDecimals: false,
                             allowBlank: false,
+                            listeners: {
+                              change: function (el) {
+                                el.up("graphMainView")
+                                  .down("[name=EdgeWeightTo]")
+                                  .minValue=el.getValue();
+                              },
+                            },
                           },
                           {
                             xtype: "numberfield",
@@ -255,11 +279,19 @@ Ext.define("test.view.main.Main.GraphMainView", {
                             margin: "0 0 0 5",
                             name: "EdgeWeightTo",
                             langIdentifier: "EdgeWeightTo",
-                            minValue: 0,
+                            minValue: -1000000,
+                            maxValue: 1000000,
                             emptyText: "Edge Weight To",
                             disabled: true,
                             allowDecimals: false,
                             allowBlank: false,
+                            listeners: {
+                              change: function (el) {
+                                el.up("graphMainView")
+                                  .down("[name=EdgeWeightFrom]")
+                                  .maxValue=el.getValue();
+                              },
+                            },
                           },
                         ],
                       },
@@ -278,9 +310,17 @@ Ext.define("test.view.main.Main.GraphMainView", {
                             langIdentifier: "VertexCountRangeFrom",
                             flex: 1,
                             minValue: 0,
+                            maxValue: 100000,
                             emptyText: "Vertex Count Range From",
                             allowDecimals: false,
                             allowBlank: false,
+                            listeners: {
+                              change: function (el) {
+                                el.up("graphMainView")
+                                  .down("[name=VertexCountRangeTo]")
+                                  .minValue=el.getValue();
+                              },
+                            },
                           },
                           {
                             xtype: "numberfield",
@@ -290,9 +330,17 @@ Ext.define("test.view.main.Main.GraphMainView", {
                             flex: 1,
                             labelWidth: 220,
                             minValue: 0,
+                            maxValue: 100000,
                             emptyText: "Vertex Count Range To",
                             allowDecimals: false,
                             allowBlank: false,
+                            listeners: {
+                              change: function (el) {
+                                el.up("graphMainView")
+                                  .down("[name=VertexCountRangeFrom]")
+                                  .maxValue=el.getValue();
+                              },
+                            },
                           },
                         ],
                       },
@@ -311,10 +359,18 @@ Ext.define("test.view.main.Main.GraphMainView", {
                             langIdentifier: "EdgeCountRangeFrom",
                             labelWidth: 220,
                             minValue: 0,
+                            maxValue: 100000,
                             emptyText: "Edge Count Range From",
                             flex: 1,
                             allowDecimals: false,
                             allowBlank: false,
+                            listeners: {
+                              change: function (el) {
+                                el.up("graphMainView")
+                                  .down("[name=EdgeCountRangeTo]")
+                                  .minValue=el.getValue();
+                              },
+                            },
                           },
                           {
                             xtype: "numberfield",
@@ -323,10 +379,18 @@ Ext.define("test.view.main.Main.GraphMainView", {
                             langIdentifier: "EdgeCountRangeTo",
                             labelWidth: 220,
                             minValue: 0,
+                            maxValue: 100000,
                             emptyText: "Edge Count Range From",
                             flex: 1,
                             allowDecimals: false,
                             allowBlank: false,
+                            listeners: {
+                              change: function (el) {
+                                el.up("graphMainView")
+                                  .down("[name=EdgeCountRangeFrom]")
+                                  .maxValue=el.getValue();
+                              },
+                            },
                           },
                         ],
                       },

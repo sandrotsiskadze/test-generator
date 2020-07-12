@@ -39,9 +39,17 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           margin: "0 5 0 0",
                           labelWidth: 220,
                           minValue: 0,
+                          maxValue: 100000,
                           emptyText: "Dimension-X From",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("mazeMainView")
+                                .down("[name=DimensionXTo]")
+                                .minValue=el.getValue();
+                            },
+                          },
                         },
                         {
                           xtype: "numberfield",
@@ -51,9 +59,17 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           margin: "0 0 0 5",
                           labelWidth: 220,
                           minValue: 0,
+                          maxValue: 100000,
                           emptyText: "Dimension-X To",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("mazeMainView")
+                                .down("[name=DimensionXFrom]")
+                                .maxValue=el.getValue();
+                            },
+                          },
                         },
                       ],
                     },
@@ -73,9 +89,17 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           margin: "0 5 0 0",
                           labelWidth: 220,
                           minValue: 0,
+                          maxValue: 100000,
                           emptyText: "Dimension-Y From",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("mazeMainView")
+                                .down("[name=DimensionYTo]")
+                                .minValue=el.getValue();
+                            },
+                          },
                         },
                         {
                           xtype: "numberfield",
@@ -85,9 +109,17 @@ Ext.define("test.view.main.Main.MazeMainView", {
                           margin: "0 0 0 5",
                           labelWidth: 220,
                           minValue: 0,
+                          maxValue: 100000,
                           emptyText: "Dimension-Y To",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("mazeMainView")
+                                .down("[name=DimensionYFrom]")
+                                .maxValue=el.getValue();
+                            },
+                          },
                         },
                       ],
                     },

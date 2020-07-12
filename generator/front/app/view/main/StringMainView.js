@@ -38,9 +38,17 @@ Ext.define("test.view.main.Main.StringMainView", {
                           flex: 1,
                           margin: "0 5 0 0",
                           minValue: 0,
+                          maxValue: 1000000,
                           emptyText: "Element Count Range From",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("stringMainView")
+                                .down("[name=ElementCountRangeTo]")
+                                .minValue=el.getValue();
+                            },
+                          },
                         },
                         {
                           xtype: "numberfield",
@@ -49,9 +57,17 @@ Ext.define("test.view.main.Main.StringMainView", {
                           flex: 1,
                           margin: "0 0 0 5",
                           minValue: 0,
+                          maxValue: 1000000,
                           emptyText: "Element Count Range To",
                           allowDecimals: false,
                           allowBlank: false,
+                          listeners: {
+                            change: function (el) {
+                              el.up("stringMainView")
+                                .down("[name=ElementCountRangeFrom]")
+                                .maxValue=el.getValue();
+                            },
+                          },
                         },
                       ],
                     },
