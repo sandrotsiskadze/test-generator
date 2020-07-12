@@ -35,8 +35,8 @@ Ext.define("test.view.main.Main.TreeMainView", {
                           xtype: "combobox",
                           flex: 1,
                           margin: "0 5 0 0",
-                          langIdentifier:"CallName",
-                          emptyText: "CallName",
+                          langIdentifier:"TreeType",
+                          emptyText: "treeType",
                           displayField: "name",
                           valueField: "id",
                           store: Ext.create("Ext.data.Store", {
@@ -52,19 +52,19 @@ Ext.define("test.view.main.Main.TreeMainView", {
                             ],
                             data: [
                               {
-                                name: "forest ",
+                                name: "Forest",
                                 id: 1,
                               },
                               {
-                                name: "connected",
+                                name: "Tree",
                                 id: 2,
                               },
                               {
-                                name: "binary",
+                                name: "Binary",
                                 id: 3,
                               },
                               {
-                                name: "balanced",
+                                name: "Balanced",
                                 id: 4,
                               },
                             ],
@@ -86,8 +86,8 @@ Ext.define("test.view.main.Main.TreeMainView", {
                     },
                     {
                       xtype: "checkboxfield",
-                      name: "WeightedVertex",
-                      langIdentifier:"WeightedVertex",
+                      name: "VertexWeighted",
+                      langIdentifier:"VertexWeighted",
                       flex: 1,
                       margin: "10 10 10 10",
                       labelWidth: "150px",

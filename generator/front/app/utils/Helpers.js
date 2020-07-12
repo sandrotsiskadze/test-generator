@@ -1,17 +1,17 @@
 Ext.define('test.utils.Helpers', {
     alternateClassName: ['Helpers'],
     singleton: true,
-    serviceUrl: 'http://localhost:1111/api/',
+    serviceUrl: 'http://localhost:8000/',
     ajaxRequest: function (path, params, succAction, failAction) {
         Ext.Ajax.request({
             url: Helpers.serviceUrl + path,
             method: "Post",
             timeout: 90000,
             success: function (result) {
-                succAction(result.Result);
+                succAction(result.responseText);
             },
             failure: function (result) {
-                if (!Ext.isEmpty(failAction)) failAction(result.Result);
+                if (!Ext.isEmpty(failAction)) failAction(result);
             },
             jsonData: params
         });
@@ -76,9 +76,10 @@ Ext.define('test.utils.Helpers', {
     },
     getEngName: function (key) {
         var map = [
-            ["CallName", "Call Name"],
+            ["GraphKind", "Graph Kind"],
             ["GraphType", "Graph Type"],
-            ["WeightedVertex", "Weighted Vertex"],
+            ["TreeType", "Tree Type"],
+            ["VertexWeighted", "Vertex Weighted"],
             ["VertexWeightFrom", "Vertex Weight From"],
             ["VertexWeightTo", "Vertex Weight To"],
             ["EdgeWeighted", "Edge Weighted"],
@@ -126,9 +127,10 @@ Ext.define('test.utils.Helpers', {
     },
     getGeoName: function (key) {
         var map = [
-            ["CallName", "დასახელება"],
+            ["GraphKind", "გრაფის სახეობა"],
             ["GraphType", "გრაფის ტიპი"],
-            ["WeightedVertex", "წონიანი წვეროები"],
+            ["TreeType", "ხის ტიპი"],
+            ["VertexWeighted", "წონიანი წვეროები"],
             ["VertexWeightFrom", "წვეროს წონა დან"],
             ["VertexWeightTo", "წვეროს წონა მდე"],
             ["EdgeWeighted", "წონიანი წიბოები"],
@@ -138,7 +140,7 @@ Ext.define('test.utils.Helpers', {
             ["VertexCountRangeTo", "წვეროების რაოდენობა მდე"],
             ["EdgeCountRangeFrom", "წიბოების რაოდენობა დან"],
             ["EdgeCountRangeTo", "წიბოეიბს რაოდენობა მდე"],
-            ["Generate", "გენერაცია"],
+            ["Generate", "გენერირება"],
             ["Answer", "პასუხი"],
             ["UserCode", "თქვენი კოდი"],
             ["Send", "გაგზავნა"],

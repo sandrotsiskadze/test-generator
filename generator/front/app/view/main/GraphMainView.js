@@ -54,15 +54,15 @@ Ext.define("test.view.main.Main.GraphMainView", {
                               ],
                               data: [
                                 {
-                                  name: "directed ",
+                                  name: "Directed",
                                   id: 1,
                                 },
                                 {
-                                  name: "multiple edges",
+                                  name: "Multiple_Edges",
                                   id: 2,
                                 },
                                 {
-                                  name: "looped",
+                                  name: "Looped",
                                   id: 3,
                                 },
                               ],
@@ -71,9 +71,10 @@ Ext.define("test.view.main.Main.GraphMainView", {
                           },
                           {
                             xtype: "combobox",
+                            name: "GraphKind",
                             margin: "0 0 0 5",
-                            langIdentifier: "CallName",
-                            emptyText: "CallName",
+                            langIdentifier: "GraphKind",
+                            emptyText: "graphKind",
                             displayField: "name",
                             valueField: "id",
                             flex: 1,
@@ -91,24 +92,28 @@ Ext.define("test.view.main.Main.GraphMainView", {
                               ],
                               data: [
                                 {
-                                  name: "default ",
+                                  name: "Default",
                                   id: 1,
                                 },
                                 {
-                                  name: "connected",
+                                  name: "Connected",
                                   id: 2,
                                 },
                                 {
-                                  name: "acyclic",
+                                  name: "Acyclic",
                                   id: 3,
                                 },
                                 {
-                                  name: "complete",
+                                  name: "One_Cycle",
                                   id: 4,
                                 },
                                 {
-                                  name: "bipartite",
+                                  name: "Complete",
                                   id: 5,
+                                },
+                                {
+                                  name: "Bipartite",
+                                  id: 6,
                                 },
                               ],
                             }),
@@ -119,8 +124,8 @@ Ext.define("test.view.main.Main.GraphMainView", {
                       {
                         xtype: "checkboxfield",
                         margin: "10 10 10 10",
-                        langIdentifier: "WeightedVertex",
-                        name: "WeightedVertex",
+                        langIdentifier: "VertexWeighted",
+                        name: "VertexWeighted",
                         fieldLabel: "Vertex Weighted",
                         labelWidth: "150px",
                         labelStyle: "text-align:right;",

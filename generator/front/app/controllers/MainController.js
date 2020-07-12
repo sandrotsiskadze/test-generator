@@ -25,22 +25,22 @@ Ext.define('test.controllers.MainController', {
     
     fnGetPathForXtype(xtype) {
         if(xtype == "FlowNetworkMainView") 
-            return "Generate/FlowNetwork";
+            return "generator/flow_network/";
             
         if(xtype == "GraphMainView") 
-            return "Generate/Graph";
+            return "generator/graph/";
 
         if(xtype == "MazeMainView") 
-            return "Generate/Maze";
+            return "generator/maxe/";
 
         if(xtype == "SequenceMainView") 
-            return "Generate/Sequence";
+            return "generator/sequence/";
 
         if(xtype == "StringMainView") 
-            return "Generate/String";
+            return "generator/string/";
 
         if(xtype == "TreeMainView") 
-            return "Generate/Tree";
+            return "generator/tree/";
     },
     
     onGenerateClick: function(el) {
@@ -61,7 +61,7 @@ Ext.define('test.controllers.MainController', {
         var values = form.getValues();
         
         if(form.isValid()) {
-            Helpers.ajaxRequest("path", values, function(result){
+            Helpers.ajaxRequest("generator/code/", values, function(result){
                 form.down("[name=UserAnswer]").setValue(result);
             }, 
             function(result) {
