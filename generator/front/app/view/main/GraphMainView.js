@@ -51,19 +51,26 @@ Ext.define("test.view.main.Main.GraphMainView", {
                                   type: "string",
                                   name: "id",
                                 },
+                                {
+                                  type: "string",
+                                  name: "langIdentifier",
+                                }
                               ],
                               data: [
                                 {
                                   name: "Directed",
                                   id: 1,
+                                  langIdentifier: "Directed",
                                 },
                                 {
                                   name: "Multiple_Edges",
                                   id: 2,
+                                  langIdentifier: "Multiple_Edges",
                                 },
                                 {
                                   name: "Looped",
                                   id: 3,
+                                  langIdentifier: "Looped",
                                 },
                               ],
                             }),
@@ -89,31 +96,41 @@ Ext.define("test.view.main.Main.GraphMainView", {
                                   type: "int",
                                   name: "id",
                                 },
+                                {
+                                  type: "string",
+                                  name: "langIdentifier",
+                                }
                               ],
                               data: [
                                 {
                                   name: "Default",
                                   id: 1,
+                                  langIdentifier: "Default",
                                 },
                                 {
                                   name: "Connected",
                                   id: 2,
+                                  langIdentifier: "Connected",
                                 },
                                 {
                                   name: "Acyclic",
                                   id: 3,
+                                  langIdentifier: "Acyclic",
                                 },
                                 {
                                   name: "One_Cycle",
                                   id: 4,
+                                  langIdentifier: "One_Cycle",
                                 },
                                 {
                                   name: "Complete",
                                   id: 5,
+                                  langIdentifier: "Complete",
                                 },
                                 {
                                   name: "Bipartite",
                                   id: 6,
+                                  langIdentifier: "Bipartite",
                                 },
                               ],
                             }),

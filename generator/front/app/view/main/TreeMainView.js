@@ -49,23 +49,31 @@ Ext.define("test.view.main.Main.TreeMainView", {
                                 type: "int",
                                 name: "id",
                               },
+                              {
+                                type: "string",
+                                name: "langIdentifier",
+                              }
                             ],
                             data: [
                               {
                                 name: "Forest",
                                 id: 1,
+                                langIdentifier: "Forest",
                               },
                               {
                                 name: "Tree",
                                 id: 2,
+                                langIdentifier: "Tree",
                               },
                               {
                                 name: "Binary",
                                 id: 3,
+                                langIdentifier: "Binary",
                               },
                               {
                                 name: "Balanced",
                                 id: 4,
+                                langIdentifier: "Balanced",
                               },
                             ],
                           }),

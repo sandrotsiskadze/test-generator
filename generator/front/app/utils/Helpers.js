@@ -33,6 +33,14 @@ Ext.define('test.utils.Helpers', {
                 else 
                     cmp.fieldLabel = name;
             }
+            st = cmp.store;
+            if (st) {
+                for (i = 0; i < st.getCount(); i++) {
+                    rec = Ext.StoreMgr.lookup(st).getAt(i);
+                    name_lang = Helpers.getName(rec.data.langIdentifier)
+                    rec.data.name = name_lang
+                }
+            }
             // cmp.setReadOnly(readOnly);
         });
         // Ext.each(parentContainet.query('container'), function (cmp) {
@@ -113,7 +121,20 @@ Ext.define('test.utils.Helpers', {
             ["QueryCount", "Query Count"],
             ["Alphabet", "Alphabet"],
             ["ArrayBased", "Array Based"],
-            ["MaximalChildren", "Maximal Children"]
+            ["MaximalChildren", "Maximal Children"],
+            ["Directed", "Directed"],
+            ["Multiple_Edges", "Multiple Edges"],
+            ["Looped", "Looped"],
+            ["Default", "Default"],
+            ["Connected", "Connected"],
+            ["Acyclic", "Acyclic"],
+            ["One_Cycle", "One Cycle"],
+            ["Complete", "Complete"],
+            ["Bipartite", "Bipartite"],
+            ["Forest", "Forest"],
+            ["Tree", "Tree"],
+            ["Binary", "Binary"],
+            ["Balanced", "Balanced"]
         ];
 
         var value = map.find(function (el) {
@@ -151,20 +172,33 @@ Ext.define('test.utils.Helpers', {
             ["DimensionXTo", "განზომილება-X მდე"],
             ["DimensionYFrom", "განზომილება-Y დან"],
             ["DimensionYTo", "განზომილება-Y მდე"],
-            ["WallCharacter", "Wall-ქარი"],
-            ["PathCharacter", "Path-ქარი"],
-            ["Connected", "დაკავშირებული"],
+            ["WallCharacter", "კედლის სიმბოლო"],
+            ["PathCharacter", "გზის სიმბოლო"],
+            ["Connected", "ბმული"],
             ["ElementCountRangeFrom", "ელემენტების რაოდენობა დან"],
             ["ElementCountRangeTo", "ელემენტების რაოდენობა მდე"],
             ["ElementValueRangeFrom", "ელემენტების მნიშვნელობა დან"],
             ["ElementValueRangeTo", "ელემენტების მნიშვნელობა მდე"],
-            ["Permutation", "პერმუტაციები"],
-            ["PermutationNumber", "პერმუტაციების რაოდენობა"],
-            ["Query", "Query-ქართ"],
-            ["QueryCount", "QueryCount-ქართ"],
+            ["Permutation", "პერმუტაცია"],
+            ["PermutationNumber", "რიცხვი პერმუტაციისთვის"],
+            ["Query", "ქუერიები"],
+            ["QueryCount", "ქუერიების რაოდენობა"],
             ["Alphabet", "ანბანი"],
             ["ArrayBased", "მასივზე დაფუძნებული"],
-            ["MaximalChildren", "შვილების მაქს. რაოდენობა"]
+            ["MaximalChildren", "შვილების მაქს. რაოდენობა"],
+            ["Directed", "მიმართული"],
+            ["Multiple_Edges", "ჯერადი წიბოები"],
+            ["Looped", "მარყუჟი"],
+            ["Default", "სტანდარტული"],
+            ["Connected", "ბმული"],
+            ["Acyclic", "აციკლური"],
+            ["One_Cycle", "ერთი ციკლით"],
+            ["Complete", "სრული"],
+            ["Bipartite", "ორნაწილიანი"],
+            ["Forest", "ტყე"],
+            ["Tree", "ხე"],
+            ["Binary", "ორობითი"],
+            ["Balanced", "ბალანსირებული"]
         ];
 
         var value = map.find(function (el) {
