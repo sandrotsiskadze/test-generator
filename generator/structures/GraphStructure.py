@@ -24,30 +24,23 @@ class GraphStructure:
     def get_graph(self):
         vertex_count = random.randint(
             self.vertex_count_range[0], self.vertex_count_range[1])
+
+        if vertex_count == 0:
+            return nx.Graph()
+
         if self.connected:
-            edge_count = random.randint(
-                vertex_count - 1, min(self.edge_count_range[1], vertex_count**2))
-            g = self.connected_graph(vertex_count, edge_count)
+            g = self.connected_graph(vertex_count)
         elif self.acyclic:
-            edge_count = random.randint(
-                vertex_count - 1, self.edge_count_range[1])
-            g = self.acyclic_graph(vertex_count, edge_count)
+            g = self.acyclic_graph(vertex_count)
         elif self.one_cycle:
             g = self.one_cycle_graph(vertex_count)
         elif self.complete:
             g = self.complete_graph(vertex_count)
         elif self.bipartite:
-            edge_count = random.randint(
-                self.edge_count_range[0], self.edge_count_range[1])
-            g = self.bipartite_graph(vertex_count, edge_count)
+            g = self.bipartite_graph(vertex_count)
         else:
-            edge_count = random.randint(
-                self.edge_count_range[0], self.edge_count_range[1])
-            g = self.default_graph(vertex_count, edge_count)
-        if self.multi:
-            g = self.to_multi(g)
-        if self.loop:
-            g = self.add_loop(g)
+            g = self.default_graph(vertex_count)
+
         if self.vertex_weighted:
             g = self.add_weight_to_nodes(g)
         if self.edge_weighted:
@@ -55,121 +48,469 @@ class GraphStructure:
 
         return g
 
-    def default_graph(self, vertex_count, edge_count):
-        g = nx.gnm_random_graph(
-            vertex_count, edge_count, directed=self.directed)
+    def default_graph(self, vertex_count):
+        minimal_edges = 0
+        minimal = max(minimal_edges, self.edge_count_range[0])
+
+        if self.multi:
+            edge_count = random.randint(
+                minimal, self.edge_count_range[1])
+
+            g = nx.empty_graph(vertex_count, nx.MultiDiGraph()
+                               if self.directed else nx.MultiGraph())
+        else:
+            maximal_edges = vertex_count * \
+                (vertex_count - 1) if self.directed else vertex_count * \
+                (vertex_count - 1) / 2
+            if self.loop:
+                maximal_edges += vertex_count
+
+            maximal = min(maximal_edges, self.edge_count_range[1])
+
+            if minimal > maximal:
+                return nx.Graph()
+
+            edge_count = random.randint(minimal, maximal)
+
+            g = nx.empty_graph(vertex_count, nx.DiGraph()
+                               if self.directed else nx.Graph())
+
+        if not self.multi and edge_count >= maximal_edges / 2:
+            x = 0
+            y = 0
+            edge_index = 0
+            number_of_edges = 0
+            while number_of_edges < edge_count:
+                if x != y or self.loop:
+                    if random.randrange(maximal_edges - edge_index) < edge_count - number_of_edges:
+                        g.add_edge(x, y)
+                        number_of_edges += 1
+                    edge_index += 1
+                y += 1
+                if y == vertex_count:
+                    x += 1
+                    y = 0 if self.directed else x
+
+        else:
+            number_of_edges = 0
+            while number_of_edges < edge_count:
+                x = random.randint(0, vertex_count - 1)
+                y = random.randint(0, vertex_count - 1)
+
+                if (x == y and not self.loop) or (not self.multi and g.has_edge(x, y)):
+                    continue
+                g.add_edge(x, y)
+                number_of_edges += 1
+
         return g
 
-    def connected_graph(self, vertex_count, edge_count):
+    def connected_graph(self, vertex_count):
         g = nx.random_tree(vertex_count)
-        nodes = list(g.nodes)
-        if len(nodes) < 2:
-            return g
-        while nx.number_of_edges(g) < edge_count:
-            x = random.randint(0, len(nodes) - 1)
-            x_val = nodes[x]
-            tmp = nodes[x]
-            nodes[x] = nodes[len(nodes) - 1]
-            nodes[len(nodes) - 1] = tmp
-            y = random.randint(0, len(nodes) - 2)
-            y_val = nodes[y]
-            tmp = nodes[x]
-            nodes[x] = nodes[len(nodes) - 1]
-            nodes[len(nodes) - 1] = tmp
-            g.add_edge(x_val, y_val)
         if self.directed:
-            g = self.to_directed(g)
+            g = self.shuffle(g)
+
+        minimal_edges = vertex_count - 1
+        minimal = max(minimal_edges, self.edge_count_range[0])
+
+        if self.multi:
+            edge_count = random.randint(
+                minimal, self.edge_count_range[1])
+
+            g = nx.MultiDiGraph(g) if self.directed else nx.MultiGraph(g)
+        else:
+            maximal_edges = vertex_count * \
+                (vertex_count - 1) if self.directed else vertex_count * \
+                (vertex_count - 1) / 2
+
+            maximal = min(maximal_edges, self.edge_count_range[1])
+            if self.loop:
+                maximal_edges += vertex_count
+
+            if minimal > maximal:
+                return nx.Graph()
+
+            edge_count = random.randint(minimal, maximal)
+
+        if not self.multi and edge_count >= maximal_edges / 2:
+            x = 0
+            y = 0
+            edge_index = 0
+            number_of_edges = 0
+            while number_of_edges < edge_count:
+                if g.has_edge(x, y):
+                    number_of_edges += 1
+                    edge_index += 1
+                elif x != y or self.loop:
+                    if random.randrange(maximal_edges - edge_index) < edge_count - number_of_edges:
+                        g.add_edge(x, y)
+                        number_of_edges += 1
+                    edge_index += 1
+                y += 1
+                if y == vertex_count:
+                    x += 1
+                    y = 0 if self.directed else x
+        else:
+            number_of_edges = vertex_count - 1
+            while number_of_edges < edge_count:
+                x = random.randint(0, vertex_count - 1)
+                y = random.randint(0, vertex_count - 1)
+
+                if (x == y and not self.loop) or (not self.multi and g.has_edge(x, y)):
+                    continue
+                g.add_edge(x, y)
+                number_of_edges += 1
+
         return g
 
-    def acyclic_graph(self, vertex_count, edge_count):
-        g = nx.gn_graph(vertex_count)
-        nodes = list(g.nodes)
-        if len(nodes) < 2:
-            return g
-        while nx.number_of_edges(g) < edge_count:
-            x = random.randint(0, len(nodes) - 1)
-            x_val = nodes[x]
-            tmp = nodes[x]
-            nodes[x] = nodes[len(nodes) - 1]
-            nodes[len(nodes) - 1] = tmp
-            y = random.randint(0, len(nodes) - 2)
-            y_val = nodes[y]
-            tmp = nodes[x]
-            nodes[x] = nodes[len(nodes) - 1]
-            nodes[len(nodes) - 1] = tmp
-            g.add_edge(max(x_val, y_val), min(x_val, y_val))
+    def shuffle(self, g_tmp):
+        g = nx.DiGraph()
+
+        for edge in g_tmp.edges:
+            coin = random.randint(0, 1)
+            x = edge[coin]
+            y = edge[1 - coin]
+            g.add_edge(x, y)
+
+        return g
+
+    def acyclic_graph(self, vertex_count):
+        g = nx.random_tree(vertex_count)
+
+        minimal_edges = vertex_count - 1
+        minimal = max(minimal_edges, self.edge_count_range[0])
+
+        if self.multi:
+            edge_count = random.randint(
+                minimal, self.edge_count_range[1])
+
+            g = nx.MultiGraph(g)
+        else:
+            maximal_edges = vertex_count * (vertex_count - 1) / 2
+            maximal = min(maximal_edges, self.edge_count_range[1])
+
+            if minimal > maximal:
+                return nx.Graph()
+
+            edge_count = random.randint(minimal, maximal)
+
+        if not self.multi and edge_count >= maximal_edges / 2:
+            x = 0
+            y = 0
+            edge_index = 0
+            number_of_edges = 0
+            while number_of_edges < edge_count:
+                if g.has_edge(x, y):
+                    number_of_edges += 1
+                    edge_index += 1
+                elif x != y:
+                    if random.randrange(maximal_edges - edge_index) < edge_count - number_of_edges:
+                        g.add_edge(x, y)
+                        number_of_edges += 1
+                    edge_index += 1
+                y += 1
+                if y == vertex_count:
+                    x += 1
+                    y = x
+        else:
+            number_of_edges = vertex_count - 1
+            while number_of_edges < edge_count:
+                x = random.randint(0, vertex_count - 1)
+                y = random.randint(0, vertex_count - 1)
+
+                if x == y or (not self.multi and g.has_edge(x, y)):
+                    continue
+                g.add_edge(x, y)
+                number_of_edges += 1
+
+        if self.multi:
+            g_tmp = nx.MultiDiGraph()
+        else:
+            g_tmp = nx.DiGraph()
+        g_tmp.add_edges_from(g.edges)
+        g = g_tmp
+
         return g
 
     def one_cycle_graph(self, vertex_count):
-        g = self.connected_graph(vertex_count, vertex_count)
+        if vertex_count < 3 and not self.loop:
+            return nx.Graph()
+
+        if self.directed:
+            minimal_edges = vertex_count
+            minimal = max(minimal_edges, self.edge_count_range[0])
+
+            maximal_edges = vertex_count * (vertex_count - 1) / 2
+            maximal = min(maximal_edges, self.edge_count_range[1])
+
+            if minimal > maximal:
+                return nx.Graph()
+
+            edge_count = random.randint(minimal, maximal)
+
+            limit_on_cycle_size = [0] * (vertex_count + 2)
+
+            limit_on_cycle_size[4] = 2
+            for i in range(5, vertex_count + 2):
+                limit_on_cycle_size[i] = (i - 2) + limit_on_cycle_size[i - 1]
+
+            maximal_cycle_size = 3
+            for i in range(3, vertex_count + 2):
+                if edge_count > maximal_edges - limit_on_cycle_size[i]:
+                    maximal_cycle_size = i - 1
+                    break
+
+            g = nx.empty_graph(vertex_count)
+
+            nodes = list(range(vertex_count))
+            cycle_cluster = []
+            cycle_nodes = []
+            cycle_cluster_set = [0] * vertex_count
+            cycle_nodes_set = [0] * vertex_count
+
+            ancestor_in_cycle = [0] * vertex_count
+            descendant_in_cycle = [0] * vertex_count
+
+            cycle_nodes_count = random.randint(3, maximal_cycle_size)
+            for _ in range(cycle_nodes_count):
+                x = random.randint(0, len(nodes) - 1)
+                node = nodes[x]
+                cycle_cluster.append(node)
+                cycle_nodes.append(node)
+                cycle_cluster_set[node] = 1
+                cycle_nodes_set[node] = 1
+                ancestor_in_cycle[node] = 1
+                descendant_in_cycle[node] = 1
+                del nodes[x]
+
+            g = nx.empty_graph(vertex_count, nx.DiGraph())
+
+            nx.add_cycle(g, cycle_nodes)
+
+            new_maximal_edges = cycle_nodes_count + (vertex_count - cycle_nodes_count) * (
+                vertex_count - cycle_nodes_count - 1) / 2 + cycle_nodes_count * (vertex_count - cycle_nodes_count)
+
+            if edge_count >= new_maximal_edges / 2:
+                x_ind = 0
+                y = 0
+                edge_index = 0
+                number_of_edges = cycle_nodes_count
+                i = 0
+                while number_of_edges < edge_count:
+                    x = cycle_cluster[x_ind]
+                    if x == y:
+                        y += 1
+                        if y == vertex_count:
+                            x_ind += 1
+                            y = 0
+                            if x_ind == vertex_count:
+                                x_ind = 0
+                                edge_index = 0
+                        continue
+                    if cycle_nodes_set[x] and cycle_nodes_set[y]:
+                        random.randrange(maximal_edges * 2 - edge_index)
+                        edge_index += 1
+                    elif g.has_edge(x, y) or g.has_edge(y, x):
+                        random.randrange(maximal_edges * 2 - edge_index)
+                        edge_index += 1
+                    else:
+                        if random.randrange(maximal_edges * 2 - edge_index) < (edge_count - number_of_edges) * 2:
+                            if ancestor_in_cycle[x] and descendant_in_cycle[y]:
+                                g.add_edge(y, x)
+                                if not cycle_cluster_set[y]:
+                                    cycle_cluster.append(y)
+                                    cycle_cluster_set[y] = 1
+                                number_of_edges += 1
+                            elif ancestor_in_cycle[y] and descendant_in_cycle[x]:
+                                g.add_edge(x, y)
+                                if not cycle_cluster_set[y]:
+                                    cycle_cluster.append(y)
+                                    cycle_cluster_set[y] = 1
+                                number_of_edges += 1
+                            else:
+                                x_bc = x
+                                y_bc = y
+                                x_tmp = min(x, y)
+                                y_tmp = max(x, y)
+                                x = x_tmp
+                                y = y_tmp
+
+                                g.add_edge(x, y)
+
+                                if ancestor_in_cycle[x]:
+                                    ancestor_in_cycle[y] = 1
+                                if descendant_in_cycle[y]:
+                                    descendant_in_cycle[x] = 1
+
+                                if not cycle_cluster_set[x]:
+                                    cycle_cluster.append(x)
+                                    cycle_cluster_set[x] = 1
+                                if not cycle_cluster_set[y]:
+                                    cycle_cluster.append(y)
+                                    cycle_cluster_set[y] = 1
+
+                                number_of_edges += 1
+
+                                x = x_bc
+                                y = y_bc
+                        edge_index += 1
+                    y += 1
+                    if y == vertex_count:
+                        x_ind += 1
+                        y = 0
+                        if x_ind == vertex_count:
+                            x_ind = 0
+                            edge_index = 0
+            else:
+                number_of_edges = cycle_nodes_count
+                while number_of_edges < edge_count:
+                    x_ind = random.randint(0, len(cycle_cluster) - 1)
+                    x = cycle_cluster[x_ind]
+                    if cycle_nodes_set[x]:
+                        y_ind = random.randint(0, len(nodes) - 1)
+                        y = nodes[y_ind]
+                    else:
+                        y = random.randint(0, vertex_count - 1)
+
+                    if x == y and not self.loop:
+                        continue
+
+                    if g.has_edge(x, y) or g.has_edge(y, x):
+                        continue
+
+                    if ancestor_in_cycle[x] and descendant_in_cycle[y]:
+                        g.add_edge(y, x)
+                        if not cycle_cluster_set[y]:
+                            cycle_cluster.append(y)
+                            cycle_cluster_set[y] = 1
+                        number_of_edges += 1
+                    elif ancestor_in_cycle[y] and descendant_in_cycle[x]:
+                        g.add_edge(x, y)
+                        if not cycle_cluster_set[y]:
+                            cycle_cluster.append(y)
+                            cycle_cluster_set[y] = 1
+                        number_of_edges += 1
+                    else:
+                        x_tmp = min(x, y)
+                        y_tmp = max(x, y)
+                        x = x_tmp
+                        y = y_tmp
+
+                        g.add_edge(x, y)
+
+                        if ancestor_in_cycle[x]:
+                            ancestor_in_cycle[y] = 1
+                        if descendant_in_cycle[y]:
+                            descendant_in_cycle[x] = 1
+
+                        if not cycle_cluster_set[x]:
+                            cycle_cluster.append(x)
+                            cycle_cluster_set[x] = 1
+                        if not cycle_cluster_set[y]:
+                            cycle_cluster.append(y)
+                            cycle_cluster_set[y] = 1
+
+                        number_of_edges += 1
+            if len(list(nx.simple_cycles(g))) != 1:
+                print('yes')
+        else:
+            g = nx.random_tree(vertex_count)
+
+            edge_count = vertex_count
+
+            number_of_edges = vertex_count - 1
+            while number_of_edges < edge_count:
+                x = random.randint(0, vertex_count - 1)
+                y = random.randint(0, vertex_count - 1)
+                if (x == y and not self.loop) or g.has_edge(x, y):
+                    continue
+                g.add_edge(x, y)
+                number_of_edges += 1
+
         return g
 
     def complete_graph(self, vertex_count):
-        g = nx.complete_graph(vertex_count)
+        g = nx.complete_graph(vertex_count, nx.DiGraph()
+                              if self.directed else nx.Graph())
         return g
 
-    def bipartite_graph(self, vertex_count, edge_count):
+    def bipartite_graph(self, vertex_count):
+        if vertex_count == 1:
+            return nx.Graph()
+
         first_set = random.randint(0, vertex_count - 1)
-        secon_set = vertex_count - first_set
-        g = nx.bipartite.gnmk_random_graph(
-            first_set, secon_set, edge_count, directed=self.directed)
-        return g
+        second_set = vertex_count - first_set
 
-    def to_directed(self, graph):
-        g = nx.DiGraph()
-        g.add_nodes_from(graph.nodes)
-        edges = list(graph.edges)
-        for edge in edges:
-            coin = random.randint(0, 1)
-            if coin == 0:
-                x = tuple(edge)[0]
-                y = tuple(edge)[1]
-            else:
-                x = tuple(edge)[1]
-                y = tuple(edge)[0]
-            g.add_edge(x, y)
-        return g
+        if first_set == 0 or second_set == 0:
+            return nx.empty_graph(vertex_count)
 
-    def add_loop(self, graph):
-        edge_count = nx.number_of_edges(graph)
-        edges_left = self.edge_count_range[1] - edge_count
-        added_edge_count = random.randint(0, edges_left)
-        final_edge_count = edge_count + added_edge_count
-        vertex_count = nx.number_of_nodes(graph)
-        while nx.number_of_edges(graph) < final_edge_count:
-            if vertex_count - 1 <= 0:
-                break
-            x = random.randint(0, vertex_count - 1)
-            graph.add_edge(x, x)
-        return graph
+        minimal_edges = 0
+        minimal = max(minimal_edges, self.edge_count_range[0])
 
-    def to_multi(self, graph):
-        edge_count = nx.number_of_edges(graph)
-        edges_left = self.edge_count_range[1] - edge_count
-        added_edge_count = random.randint(0, edges_left)
-        final_edge_count = edge_count + added_edge_count
-        if self.directed:
-            g = nx.MultiDiGraph()
+        if self.multi:
+            edge_count = random.randint(
+                minimal, self.edge_count_range[1])
+
+            g = nx.empty_graph(vertex_count, nx.MultiDiGraph()
+                               if self.directed else nx.MultiGraph())
         else:
-            g = nx.MultiGraph()
-        g.add_nodes_from(graph.nodes)
-        g.add_edges_from(graph.edges)
-        edges = list(graph.edges)
-        while nx.number_of_edges(g) < final_edge_count:
-            if len(edges) - 1 <= 0:
-                break
-            x = random.randint(0, len(edges) - 1)
-            g.add_edge(tuple(edges[x])[0], tuple(edges[x])[1])
+            maximal_edges = first_set * second_set * \
+                2 if self.directed else first_set * second_set
+            maximal = min(maximal_edges, self.edge_count_range[1])
+
+            if minimal > maximal:
+                return nx.Graph()
+
+            edge_count = random.randint(minimal, maximal)
+
+            g = nx.empty_graph(vertex_count, nx.DiGraph()
+                               if self.directed else nx.Graph())
+
+        if not self.multi and edge_count >= maximal_edges / 2:
+            x = 0
+            y = first_set
+            starter = first_set
+            terminator = vertex_count
+            edge_index = 0
+            number_of_edges = 0
+            while number_of_edges < edge_count:
+                if random.randrange(maximal_edges - edge_index) < edge_count - number_of_edges:
+                    g.add_edge(x, y)
+                    number_of_edges += 1
+                edge_index += 1
+                y += 1
+                if y == terminator:
+                    x += 1
+                    if x == starter:
+                        starter = 0
+                        terminator = first_set
+                    y = starter
+        else:
+            number_of_edges = 0
+            while number_of_edges < edge_count:
+                x = random.randint(0, first_set - 1)
+                y = random.randint(first_set, vertex_count - 1)
+                if self.directed:
+                    coin = random.randint(0, 1)
+                    if coin == 1:
+                        tmp = x
+                        x = y
+                        y = tmp
+
+                if not self.multi and g.has_edge(x, y):
+                    continue
+                g.add_edge(x, y)
+                number_of_edges += 1
+
         return g
 
-    def add_weight_to_nodes(self, graph):
-        for node in graph.nodes:
-            graph.nodes[node]['weight'] = random.randint(
+    def add_weight_to_nodes(self, g):
+        for node in g.nodes:
+            g.nodes[node]['weight'] = random.randint(
                 self.vertex_weight_range[0], self.vertex_weight_range[1])
-        return graph
+        return g
 
-    def add_weight_to_edges(self, graph):
-        for edge in graph.edges:
-            graph.edges[edge]['weight'] = random.randint(
+    def add_weight_to_edges(self, g):
+        for edge in g.edges:
+            g.edges[edge]['weight'] = random.randint(
                 self.edge_weight_range[0], self.edge_weight_range[1])
-        return graph
+        return g

@@ -10,5 +10,6 @@ urlpatterns = [
     path('sequence/', views.sequence, name='sequence'),
     path('maze/', views.maze, name='maze'),
     path('string/', views.string_, name='string'),
+    path('coordinate/', views.coordinate_space, name='coordinate_space'),
     path('code/', views.code, name='code')
 ]

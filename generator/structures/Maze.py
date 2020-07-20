@@ -25,8 +25,8 @@ class Maze:
         total_cell_num = width * height
         path_num = random.randint(0, total_cell_num)
         cells = []
-        for i in range(width):
-            for j in range(height):
+        for i in range(height):
+            for j in range(width):
                 cells.append((i, j))
         for _ in range(path_num):
             cell_ind = random.randint(0, len(cells) - 1)
@@ -39,19 +39,15 @@ class Maze:
         total_cell_num = width * height
         path_num = random.randint(0, total_cell_num)
         cells = []
-        for i in range(width):
-            for j in range(height):
+        for i in range(height):
+            for j in range(width):
                 cells.append((i, j))
         fringe = []
         start = (random.randint(0, height - 1), random.randint(0, width - 1))
         fringe.append(start)
         for _ in range(path_num):
-            if len(fringe) == 1:
-                cell_ind = 0
-                cell = fringe[0]
-            else:
-                cell_ind = random.randint(0, len(fringe) - 1)
-                cell = fringe[cell_ind]
+            cell_ind = random.randint(0, len(fringe) - 1)
+            cell = fringe[cell_ind]
             m[cell[0]][cell[1]] = self.path_symbol
             if cell[0] > 0 and m[cell[0] - 1][cell[1]] != self.path_symbol:
                 fringe.append((cell[0] - 1, cell[1]))

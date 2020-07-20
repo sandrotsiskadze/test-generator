@@ -1,5 +1,6 @@
 import networkx as nx
 import random
+from . import GraphStructure as gr
 
 
 class Sequence:
@@ -12,19 +13,18 @@ class Sequence:
         self.query_count = query_count
 
     def get_sequence(self):
-        element_count = random.randint(
-            self.element_count_range[0], self.element_count_range[1])
         if self.permutation:
             seq = self.generate_permution()
         else:
-            seq = self.generate_sequence(element_count)
+            seq = self.generate_sequence()
         queries = []
         if self.query:
-            queries = self.generate_queries(
-                self.permutation_number if self.permutation else element_count)
+            queries = self.generate_queries(len(seq))
         return (seq, queries)
 
-    def generate_sequence(self, element_count):
+    def generate_sequence(self):
+        element_count = random.randint(
+            self.element_count_range[0], self.element_count_range[1])
         result = []
         for _ in range(element_count):
             result.append(random.randint(
@@ -32,18 +32,12 @@ class Sequence:
         return result
 
     def generate_permution(self):
-        result = []
-        nums = list(range(1, self.permutation_number + 1))
-        for _ in range(self.permutation_number):
-            if len(nums) == 1:
-                result.append(nums[0])
-                del nums[0]
-            else:
-                x = random.randint(0, len(nums) - 1)
-                result.append(nums[x])
-                del nums[x]
+        result = list(range(1, self.permutation_number + 1))
+        random.shuffle(result)
         return result
 
     def generate_queries(self, element_count):
-        g = nx.gnm_random_graph(element_count, self.query_count)
+        g_struct = gr.GraphStructure(vertex_count_range=(
+            element_count, element_count), edge_count_range=(self.query_count, self.query_count))
+        g = g_struct.get_graph()
         return g.edges

@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import ast
 import types
 import string
+from functools import reduce
 import networkx as nx
 from .structures import GraphStructure as gr
 from .structures import TreeStructure as tr
@@ -11,10 +12,11 @@ from .structures import FlowNetwork as fn
 from .structures import Sequence as sq
 from .structures import Maze as mz
 from .structures import String as st
+from .structures import CoordinateSpace as cs
 
 # Create your views here.
 
-result = []
+result = None
 
 
 @csrf_exempt
@@ -126,7 +128,7 @@ def tree(request):
         elif mydata['TreeType'] == 4:
             balanced = True
     if 'ArrayBased' in mydata:
-        if ['ArrayBased'] == 'on':
+        if mydata['ArrayBased'] == 'on':
             array = True
     if 'VertexWeighted' in mydata:
         if mydata['VertexWeighted'] == 'on':
@@ -154,6 +156,9 @@ def tree(request):
                          maximal_children_count, vertex_count_range)
     res = t.get_tree()
 
+    arr = res[1]
+    res = res[0]
+
     if vertex_weighted:
         nodes = list(res.nodes.data('weight'))
     else:
@@ -165,16 +170,22 @@ def tree(request):
         edges = list(res.edges)
 
     global result
-    result = edges
+    if arr:
+        result = edges
+    else:
+        result = edges
 
     response = ''
     response += str(nx.number_of_nodes(res)) + '\n'
     response += str(nx.number_of_edges(res)) + '\n'
-    if vertex_weighted:
-        for node in nodes:
-            response += str(node[1]) + '\n'
-    for edge in edges:
-        response += str(edge).strip('()').replace(',', '') + '\n'
+    if arr:
+        response += str(arr)
+    else:
+        if vertex_weighted:
+            for node in nodes:
+                response += str(node[1]) + '\n'
+        for edge in edges:
+            response += str(edge).strip('()').replace(',', '') + '\n'
     return HttpResponse(response)
 
 
@@ -273,12 +284,14 @@ def maze(request):
     connected = False
     dict_str = request.body.decode("UTF-8")
     mydata = ast.literal_eval(dict_str)
-    if 'DimensionX' in mydata:
-        if mydata['DimensionX']:
-            height_range = (0, int(mydata['DimensionX']))
-    if 'DimensionY' in mydata:
-        if mydata['DimensionY']:
-            width_range = (0, int(mydata['DimensionY']))
+    if 'DimensionXFrom' in mydata and 'DimensionXTo' in mydata:
+        if mydata['DimensionXFrom'] and mydata['DimensionXTo']:
+            height_range = (int(mydata['DimensionXFrom']), int(
+                mydata['DimensionXTo']))
+    if 'DimensionYFrom' in mydata and 'DimensionYTo' in mydata:
+        if mydata['DimensionYFrom'] and mydata['DimensionYTo']:
+            width_range = (int(mydata['DimensionYFrom']),
+                           int(mydata['DimensionYTo']))
     if 'WallCharacter' in mydata:
         if mydata['WallCharacter']:
             wall_symbol = mydata['WallCharacter']
@@ -332,12 +345,64 @@ def string_(request):
 
 
 @csrf_exempt
+def coordinate_space(request):
+    width_range = (0, 10)
+    height_range = (0, 10)
+    vector_count_range = (0, 10)
+    dict_str = request.body.decode("UTF-8")
+    mydata = ast.literal_eval(dict_str)
+    if 'DimensionXFrom' in mydata and 'DimensionXTo' in mydata:
+        if mydata['DimensionXFrom'] and mydata['DimensionXTo']:
+            width_range = (int(mydata['DimensionXFrom']),
+                           int(mydata['DimensionXTo']))
+    if 'DimensionYFrom' in mydata and 'DimensionYTo' in mydata:
+        if mydata['DimensionYFrom'] and mydata['DimensionYTo']:
+            height_range = (int(mydata['DimensionYFrom']),
+                            int(mydata['DimensionYTo']))
+    if 'VectorCountFrom' in mydata and 'VectorCountTo' in mydata:
+        if mydata['VectorCountFrom'] and mydata['VectorCountTo']:
+            vector_count_range = (int(mydata['VectorCountFrom']),
+                                  int(mydata['VectorCountTo']))
+
+    c = cs.CoordinateSpace(width_range, height_range, vector_count_range)
+    res = c.get_vectors()
+
+    edges = list(res.edges)
+
+    global result
+    result = res
+
+    response = ''
+    response += str(res.number_of_edges()) + '\n'
+    for edge in edges:
+        response += str(edge).strip('()').replace(',', '') + '\n'
+
+    return HttpResponse(response)
+
+
+@csrf_exempt
 def code(request):
-    code = "def sandro(x):\n\treturn x**2"
+    dict_str = request.body.decode("UTF-8")
+    mydata = ast.literal_eval(dict_str)
+    code = ''
+    if 'UserCode' in mydata:
+        code = mydata['UserCode']
     code_obj = compile(code, '<string>', 'exec')
     new_func = types.FunctionType(code_obj.co_consts[0], globals())
-    print(list(map(new_func, result)))
-    return HttpResponse('')
+    res = None
+    if 'UserChoice' in mydata:
+        if mydata['UserChoice'] == '1':
+            res = list(map(new_func, result))
+        elif mydata['UserChoice'] == '2':
+            res = list(filter(new_func, result))
+        elif mydata['UserChoice'] == '3':
+            res = reduce(new_func, result)
+        else:
+            res = new_func(result)
+
+    response = str(res).strip('[]').replace(',', '')
+
+    return HttpResponse(response)
 
 
 def index(request):
