@@ -1,2 +1,2 @@
 // @tag full-page
-// @require C:\Users\Soso\Desktop\test-generator\test-generator\generator\front\app.js
+// @require /home/sandro/Desktop/project1/test-generator/generator/front/app.js

@@ -78,6 +78,10 @@ Ext.define('test.view.main.Main', {
               xtype: "stringMainView",
               title: "String",
             },
+            {
+              xtype: "coordinateSpaceMainView",
+              title: "Coordinate Space",
+            },
           ],
         });
 

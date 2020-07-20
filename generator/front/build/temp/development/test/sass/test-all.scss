@@ -1,5 +1,5 @@
 $app-name:  dynamic( 'test' );
-$image-search-path: 'C:/Users/Soso/Desktop/test-generator/test-generator/generator/front/build/development/test/classic/resources';
+$image-search-path: '/home/sandro/Desktop/project1/test-generator/generator/front/build/development/test/classic/resources';
 $theme-name:  dynamic( 'theme-crisp' );
 $include-ext-abstractcomponent: dynamic(true);;
 $include-ext-abstractcontainer: dynamic(true);;
@@ -901,6 +901,8 @@ $include-test-store-personnel: dynamic(true);;
 $include-test-utils-helpers: dynamic(true);;
 $include-test-view-main-list: dynamic(true);;
 $include-test-view-main-main: dynamic(true);;
+$include-test-view-main-main-codeareamainview: dynamic(true);;
+$include-test-view-main-main-coordinatespacemainview: dynamic(true);;
 $include-test-view-main-main-flownetworkmainview: dynamic(true);;
 $include-test-view-main-main-graphmainview: dynamic(true);;
 $include-test-view-main-main-mazemainview: dynamic(true);;

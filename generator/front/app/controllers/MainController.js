@@ -31,7 +31,7 @@ Ext.define('test.controllers.MainController', {
             return "generator/graph/";
 
         if(xtype == "MazeMainView") 
-            return "generator/maxe/";
+            return "generator/maze/";
 
         if(xtype == "SequenceMainView") 
             return "generator/sequence/";
@@ -41,6 +41,9 @@ Ext.define('test.controllers.MainController', {
 
         if(xtype == "TreeMainView") 
             return "generator/tree/";
+
+        if(xtype == "CoordinateSpaceMainView")
+            return "generator/coordinate/";
     },
     
     onGenerateClick: function(el) {

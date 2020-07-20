@@ -34,6 +34,7 @@ Ext.define("test.view.main.Main.TreeMainView", {
                         {
                           xtype: "combobox",
                           flex: 1,
+                          name: "TreeType",
                           margin: "0 5 0 0",
                           langIdentifier:"TreeType",
                           emptyText: "treeType",
