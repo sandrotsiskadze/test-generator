@@ -232,14 +232,14 @@ class GraphStructure:
         return g
 
     def one_cycle_graph(self, vertex_count):
-        if vertex_count < 3 and not self.loop:
+        if vertex_count == 1 and not self.loop:
             return nx.Graph()
 
         if self.directed:
             minimal_edges = vertex_count
             minimal = max(minimal_edges, self.edge_count_range[0])
 
-            maximal_edges = vertex_count * (vertex_count - 1) / 2
+            maximal_edges = vertex_count * (vertex_count - 1) / 2 + 1
             maximal = min(maximal_edges, self.edge_count_range[1])
 
             if minimal > maximal:
@@ -249,15 +249,21 @@ class GraphStructure:
 
             limit_on_cycle_size = [0] * (vertex_count + 2)
 
+            limit_on_cycle_size[1] = 0
+            limit_on_cycle_size[2] = 0
+            limit_on_cycle_size[3] = 1
             limit_on_cycle_size[4] = 2
             for i in range(5, vertex_count + 2):
                 limit_on_cycle_size[i] = (i - 2) + limit_on_cycle_size[i - 1]
 
-            maximal_cycle_size = 3
-            for i in range(3, vertex_count + 2):
+            maximal_cycle_size = 0
+            for i in range(1, vertex_count + 2):
                 if edge_count > maximal_edges - limit_on_cycle_size[i]:
                     maximal_cycle_size = i - 1
                     break
+
+            if maximal_cycle_size == 2 and self.loop:
+                maximal_cycle_size = random.randint(1, 2)
 
             g = nx.empty_graph(vertex_count)
 
@@ -270,7 +276,7 @@ class GraphStructure:
             ancestor_in_cycle = [0] * vertex_count
             descendant_in_cycle = [0] * vertex_count
 
-            cycle_nodes_count = random.randint(3, maximal_cycle_size)
+            cycle_nodes_count = random.randint(1 if self.loop else 2, maximal_cycle_size)
             for _ in range(cycle_nodes_count):
                 x = random.randint(0, len(nodes) - 1)
                 node = nodes[x]
@@ -294,26 +300,10 @@ class GraphStructure:
                 y = 0
                 edge_index = 0
                 number_of_edges = cycle_nodes_count
-                i = 0
                 while number_of_edges < edge_count:
                     x = cycle_cluster[x_ind]
-                    if x == y:
-                        y += 1
-                        if y == vertex_count:
-                            x_ind += 1
-                            y = 0
-                            if x_ind == vertex_count:
-                                x_ind = 0
-                                edge_index = 0
-                        continue
-                    if cycle_nodes_set[x] and cycle_nodes_set[y]:
-                        random.randrange(maximal_edges * 2 - edge_index)
-                        edge_index += 1
-                    elif g.has_edge(x, y) or g.has_edge(y, x):
-                        random.randrange(maximal_edges * 2 - edge_index)
-                        edge_index += 1
-                    else:
-                        if random.randrange(maximal_edges * 2 - edge_index) < (edge_count - number_of_edges) * 2:
+                    if x != y and not (cycle_nodes_set[x] and cycle_nodes_set[y]) and not (g.has_edge(x, y) or g.has_edge(y, x)):
+                        if random.randrange(new_maximal_edges - edge_index) < edge_count - number_of_edges:
                             if ancestor_in_cycle[x] and descendant_in_cycle[y]:
                                 g.add_edge(y, x)
                                 if not cycle_cluster_set[y]:
@@ -357,9 +347,6 @@ class GraphStructure:
                     if y == vertex_count:
                         x_ind += 1
                         y = 0
-                        if x_ind == vertex_count:
-                            x_ind = 0
-                            edge_index = 0
             else:
                 number_of_edges = cycle_nodes_count
                 while number_of_edges < edge_count:
@@ -371,10 +358,7 @@ class GraphStructure:
                     else:
                         y = random.randint(0, vertex_count - 1)
 
-                    if x == y and not self.loop:
-                        continue
-
-                    if g.has_edge(x, y) or g.has_edge(y, x):
+                    if x == y or (g.has_edge(x, y) or g.has_edge(y, x)):
                         continue
 
                     if ancestor_in_cycle[x] and descendant_in_cycle[y]:
@@ -410,8 +394,6 @@ class GraphStructure:
                             cycle_cluster_set[y] = 1
 
                         number_of_edges += 1
-            if len(list(nx.simple_cycles(g))) != 1:
-                print('yes')
         else:
             g = nx.random_tree(vertex_count)
 
