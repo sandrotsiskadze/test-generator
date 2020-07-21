@@ -13,4 +13,4 @@ class String:
             self.element_count_range[0], self.element_count_range[1])
         for _ in range(element_count):
             result += str(random.choice(self.alphabet))
-        return (self.alphabet, result)
+        return result

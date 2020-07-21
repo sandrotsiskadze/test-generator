@@ -276,7 +276,8 @@ class GraphStructure:
             ancestor_in_cycle = [0] * vertex_count
             descendant_in_cycle = [0] * vertex_count
 
-            cycle_nodes_count = random.randint(1 if self.loop else 2, maximal_cycle_size)
+            cycle_nodes_count = random.randint(
+                1 if self.loop else 2, maximal_cycle_size)
             for _ in range(cycle_nodes_count):
                 x = random.randint(0, len(nodes) - 1)
                 node = nodes[x]
@@ -347,6 +348,9 @@ class GraphStructure:
                     if y == vertex_count:
                         x_ind += 1
                         y = 0
+                        if x_ind == vertex_count:
+                            x_ind = 0
+                            edge_index = 0
             else:
                 number_of_edges = cycle_nodes_count
                 while number_of_edges < edge_count:

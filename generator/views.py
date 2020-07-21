@@ -16,7 +16,11 @@ from .structures import CoordinateSpace as cs
 
 # Create your views here.
 
-result = None
+filter_data = []
+map_data = []
+reduce_data = []
+answer_data = ()
+is_str = False
 
 
 @csrf_exempt
@@ -78,31 +82,45 @@ def graph(request):
             edge_count_range = (int(mydata['EdgeCountRangeFrom']), int(
                 mydata['EdgeCountRangeTo']))
 
-    g = gr.GraphStructure(directed, connected, acyclic, one_cycle, complete, bipartite, loop, multi, vertex_weighted,
-                          vertex_weight_range, edge_weighted, edge_weight_range, vertex_count_range, edge_count_range)
-    res = g.get_graph()
+    g_struct = gr.GraphStructure(directed, connected, acyclic, one_cycle, complete, bipartite, loop, multi, vertex_weighted,
+                                 vertex_weight_range, edge_weighted, edge_weight_range, vertex_count_range, edge_count_range)
+    res = g_struct.get_graph()
+
+    g = res
 
     if vertex_weighted:
-        nodes = list(res.nodes.data('weight'))
+        nodes = list(g.nodes.data('weight'))
     else:
-        nodes = list(res.nodes)
+        nodes = list(g.nodes)
 
     if edge_weighted:
-        edges = list(res.edges.data('weight'))
+        edges = list(g.edges.data('weight', keys=False))
     else:
-        edges = list(res.edges)
+        edges = list(g.edges(keys=False))
 
-    global result
-    result = edges
+    vertex_count = len(nodes)
+    edge_count = len(edges)
 
     response = ''
-    response += str(nx.number_of_nodes(res)) + '\n'
-    response += str(nx.number_of_edges(res)) + '\n'
+    response += str(vertex_count) + '\n'
+    response += str(edge_count) + '\n'
     if vertex_weighted:
         for node in nodes:
             response += str(node[1]) + '\n'
     for edge in edges:
         response += str(edge).strip('()').replace(',', '') + '\n'
+
+    global filter_data
+    global map_data
+    global reduce_data
+    global answer_data
+    global is_str
+    filter_data = edges
+    map_data = edges
+    reduce_data = edges
+    answer_data = (vertex_count, edge_count, nodes, edges)
+    is_str = False
+
     return HttpResponse(response)
 
 
@@ -152,32 +170,29 @@ def tree(request):
         if mydata['MaximalChildren']:
             maximal_children_count = int(mydata['MaximalChildren'])
 
-    t = tr.TreeStructure(array, connected, binary, balanced, vertex_weighted, vertex_weight_range, edge_weighted, edge_weight_range,
-                         maximal_children_count, vertex_count_range)
-    res = t.get_tree()
+    t_struct = tr.TreeStructure(array, connected, binary, balanced, vertex_weighted, vertex_weight_range, edge_weighted, edge_weight_range,
+                                maximal_children_count, vertex_count_range)
+    res = t_struct.get_tree()
 
+    t = res[0]
     arr = res[1]
-    res = res[0]
 
     if vertex_weighted:
-        nodes = list(res.nodes.data('weight'))
+        nodes = list(t.nodes.data('weight'))
     else:
-        nodes = list(res.nodes)
+        nodes = list(t.nodes)
 
     if edge_weighted:
-        edges = list(res.edges.data('weight'))
+        edges = list(t.edges.data('weight'))
     else:
-        edges = list(res.edges)
+        edges = list(t.edges)
 
-    global result
-    if arr:
-        result = edges
-    else:
-        result = edges
+    vertex_count = len(nodes)
+    edge_count = len(edges)
 
     response = ''
-    response += str(nx.number_of_nodes(res)) + '\n'
-    response += str(nx.number_of_edges(res)) + '\n'
+    response += str(vertex_count) + '\n'
+    response += str(edge_count) + '\n'
     if arr:
         response += str(arr)
     else:
@@ -186,6 +201,24 @@ def tree(request):
                 response += str(node[1]) + '\n'
         for edge in edges:
             response += str(edge).strip('()').replace(',', '') + '\n'
+
+    global filter_data
+    global map_data
+    global reduce_data
+    global answer_data
+    global is_str
+    if arr:
+        filter_data = arr
+        map_data = arr
+        reduce_data = arr
+        answer_data = (vertex_count, edge_count, nodes, arr)
+    else:
+        filter_data = edges
+        map_data = edges
+        reduce_data = edges
+        answer_data = (vertex_count, edge_count, nodes, edges)
+    is_str = False
+
     return HttpResponse(response)
 
 
@@ -208,20 +241,38 @@ def flow_network(request):
         if mydata['MaximalWeight']:
             capacity_range = (0, int(mydata['MaximalWeight']))
 
-    f = fn.FlowNetwork(capacity_range, vertex_count_range, edge_count_range)
-    res = f.get_flow_network()
+    f_struct = fn.FlowNetwork(
+        capacity_range, vertex_count_range, edge_count_range)
+    res = f_struct.get_flow_network()
 
-    edges = list(res[2].edges.data('weight'))
+    source = res[0]
+    sink = res[1]
+    f = res[2]
 
-    global result
-    result = edges
+    nodes = list(f.nodes)
+
+    edges = list(f.edges.data('weight'))
+
+    vertex_count = len(nodes)
+    edge_count = len(edges)
 
     response = ''
-    response += str(nx.number_of_nodes(res[2])) + '\n'
-    response += str(nx.number_of_edges(res[2])) + '\n'
-    response += str(res[0]) + ' ' + str(res[1]) + '\n'
+    response += str(vertex_count) + '\n'
+    response += str(edge_count) + '\n'
+    response += str(source) + ' ' + str(sink) + '\n'
     for edge in edges:
         response += str(edge).strip('()').replace(',', '') + '\n'
+
+    global filter_data
+    global map_data
+    global reduce_data
+    global answer_data
+    global is_str
+    filter_data = edges
+    map_data = edges
+    reduce_data = edges
+    answer_data = (vertex_count, edge_count, source, sink, nodes, edges)
+    is_str = False
 
     return HttpResponse(response)
 
@@ -256,21 +307,34 @@ def sequence(request):
         if mydata['QueryCount']:
             query_count = int(mydata['QueryCount'])
 
-    s = sq.Sequence(element_count_range, element_value_range,
-                    permutation, permutation_number, query, query_count)
-    res = s.get_sequence()
+    s_struct = sq.Sequence(element_count_range, element_value_range,
+                           permutation, permutation_number, query, query_count)
+    res = s_struct.get_sequence()
 
-    global result
-    result = res[0]
+    s = res[0]
+    q = res[1]
+
+    element_count = len(s)
 
     response = ''
-    response += str(len(res[0])) + '\n'
-    for element in res[0]:
+    response += str(element_count) + '\n'
+    for element in s:
         response += str(element) + '\n'
-    if res[1]:
-        response += str(len(res[1])) + '\n'
-        for element in res[1]:
+    if q:
+        response += str(query_count) + '\n'
+        for element in q:
             response += str(element).strip('()').replace(',', '') + '\n'
+
+    global filter_data
+    global map_data
+    global reduce_data
+    global answer_data
+    global is_str
+    filter_data = s
+    map_data = s
+    reduce_data = s
+    answer_data = (element_count, s, query_count, q)
+    is_str = False
 
     return HttpResponse(response)
 
@@ -302,15 +366,31 @@ def maze(request):
         if mydata['Connected'] == 'on':
             connected = True
 
-    m = mz.Maze(width_range, height_range, path_symbol, wall_symbol, connected)
-    res = m.get_maze()
+    m_struct = mz.Maze(width_range, height_range,
+                       path_symbol, wall_symbol, connected)
+    res = m_struct.get_maze()
 
-    global result
-    result = res
+    m = res
+
+    width = len(m[0])
+    height = len(m)
 
     response = ''
-    for i in range(len(res)):
-        response += str(res[i]).strip('[]').replace(',', '') + '\n'
+    response += str(width) + '\n'
+    response += str(height) + '\n'
+    for i in m:
+        response += str(i).strip('[]').replace(',', '') + '\n'
+
+    global filter_data
+    global map_data
+    global reduce_data
+    global answer_data
+    global is_str
+    filter_data = m
+    map_data = m
+    reduce_data = m
+    answer_data = (width, height, m)
+    is_str = False
 
     return HttpResponse(response)
 
@@ -329,17 +409,30 @@ def string_(request):
         if mydata['Alphabet']:
             alphabet = mydata['Alphabet']
 
-    s = st.String(element_count_range, alphabet)
-    res = s.get_string()
+    s_struct = st.String(element_count_range, alphabet)
+    res = s_struct.get_string()
 
-    global result
-    result = res
+    s = res
+
+    element_count = len(s)
+    alphabet_count = len(alphabet)
 
     response = ''
-    response += str(len(res[0])) + '\n'
-    response += res[0] + '\n'
-    response += str(len(res[1])) + '\n'
-    response += res[1] + '\n'
+    response += str(alphabet_count) + '\n'
+    response += alphabet + '\n'
+    response += str(element_count) + '\n'
+    response += s + '\n'
+
+    global filter_data
+    global map_data
+    global reduce_data
+    global answer_data
+    global is_str
+    filter_data = s
+    map_data = s
+    reduce_data = s
+    answer_data = (alphabet_count, alphabet, element_count, s)
+    is_str = True
 
     return HttpResponse(response)
 
@@ -364,18 +457,34 @@ def coordinate_space(request):
             vector_count_range = (int(mydata['VectorCountFrom']),
                                   int(mydata['VectorCountTo']))
 
-    c = cs.CoordinateSpace(width_range, height_range, vector_count_range)
-    res = c.get_vectors()
+    c_struct = cs.CoordinateSpace(
+        width_range, height_range, vector_count_range)
+    res = c_struct.get_vectors()
 
-    edges = list(res.edges)
+    c = res
 
-    global result
-    result = res
+    nodes = list(c.nodes)
+
+    edges = list(c.edges)
+
+    vertex_count = len(nodes)
+    edge_count = len(edges)
 
     response = ''
-    response += str(res.number_of_edges()) + '\n'
+    response += str(edge_count) + '\n'
     for edge in edges:
         response += str(edge).strip('()').replace(',', '') + '\n'
+
+    global filter_data
+    global map_data
+    global reduce_data
+    global answer_data
+    global is_str
+    filter_data = edges
+    map_data = edges
+    reduce_data = edges
+    answer_data = (edge_count, edges)
+    is_str = False
 
     return HttpResponse(response)
 
@@ -387,33 +496,44 @@ def code(request):
     code = ''
     if 'UserCode' in mydata:
         code = mydata['UserCode']
-    code_obj = compile(code, '<string>', 'exec')
+    try:
+        code_obj = compile(code, '<string>', 'exec')
+    except Exception as e:
+        return HttpResponse(str(e))
     new_func = types.FunctionType(code_obj.co_consts[0], globals())
     res = None
     if 'UserChoice' in mydata:
         if mydata['UserChoice'] == '1':
-            res = list(map(new_func, result))
+            try:
+                res = list(map(new_func, map_data))
+            except Exception as e:
+                return HttpResponse(e)
         elif mydata['UserChoice'] == '2':
-            res = list(filter(new_func, result))
+            try:
+                res = list(filter(new_func, filter_data))
+            except Exception as e:
+                return HttpResponse(e)
         elif mydata['UserChoice'] == '3':
-            res = reduce(new_func, result)
+            try:
+                res = reduce(new_func, reduce_data)
+            except Exception as e:
+                return HttpResponse(e)
         else:
-            res = new_func(result)
+            try:
+                res = new_func(answer_data)
+            except Exception as e:
+                return HttpResponse(e)
 
-    response = str(res).strip('[]').replace(',', '')
+    response = ''
+    if mydata['UserChoice'] == '3' or mydata['UserChoice'] == '4':
+        response = str(res)
+    else:
+        for x in res:
+            response += str(x) if is_str else str(x).strip(
+                '()').strip('[]').replace(',', '') + '\n'
 
     return HttpResponse(response)
 
 
 def index(request):
-    # s = sq.Sequence(element_count_range=(9, 10), query=True, query_count=5)
-    # string = "def sandro(x):\n\treturn x**2"
-    # code_obj = compile(string, '<string>', 'exec')
-    # new_func = types.FunctionType(code_obj.co_consts[0], globals())
-    # print(list(map(new_func, s.get_sequence())))
-    # s = st.String()
-    # print(s.get_string())
-    # f = fn.FlowNetwork()
-    # result = f.get_flow_network()
-    # print(result)
     return render(request, 'generator/index.html', {})
