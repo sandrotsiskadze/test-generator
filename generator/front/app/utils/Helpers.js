@@ -136,7 +136,11 @@ Ext.define('test.utils.Helpers', {
             ["Forest", "Forest"],
             ["Tree", "Tree"],
             ["Binary", "Binary"],
-            ["Balanced", "Balanced"]
+            ["Balanced", "Balanced"],
+            ["Map", "Map"],
+            ["Filter", "Filter"],
+            ["Reduce", "Reduce"],
+            ["Get_Answer", "Get Answer"]
         ];
 
         var value = map.find(function (el) {
@@ -202,7 +206,11 @@ Ext.define('test.utils.Helpers', {
             ["Forest", "ტყე"],
             ["Tree", "ხე"],
             ["Binary", "ორობითი"],
-            ["Balanced", "ბალანსირებული"]
+            ["Balanced", "ბალანსირებული"],
+            ["Map", "ფუნქცია"],
+            ["Filter", "ფილტრი"],
+            ["Reduce", "დაყვანა"],
+            ["Get_Answer", "პასუხის მიღება"]
         ];
 
         var value = map.find(function (el) {

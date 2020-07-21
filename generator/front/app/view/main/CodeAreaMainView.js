@@ -50,23 +50,31 @@ Ext.define("test.view.main.Main.CodeAreaMainView", {
                           type: "string",
                           name: "id",
                         },
+                        {
+                          type: "string",
+                          name: "langIdentifier",
+                        }
                       ],
                       data: [
                         {
                           name: "Map",
                           id: 1,
+                          langIdentifier: "Map",
                         },
                         {
                           name: "Filter",
                           id: 2,
+                          langIdentifier: "Filter",
                         },
                         {
                           name: "Reduce",
                           id: 3,
+                          langIdentifier: "Reduce",
                         },
                         {
                           name: "Get Answer",
                           id: 4,
+                          langIdentifier: "Get_Answer"
                         },
                       ],
                     }),
