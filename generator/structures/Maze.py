@@ -23,7 +23,7 @@ class Maze:
     def default_maze(self, width, height):
         m = [[self.wall_symbol] * width for _ in range(height)]
         total_cell_num = width * height
-        path_num = random.randint(0, total_cell_num / 2)
+        path_num = random.randint(0, total_cell_num // 2)
         cells = []
         for i in range(height):
             for j in range(width):
@@ -37,7 +37,7 @@ class Maze:
     def connected_maze(self, width, height):
         m = [[self.wall_symbol] * width for _ in range(height)]
         total_cell_num = width * height
-        path_num = random.randint(0, total_cell_num / 2)
+        path_num = random.randint(0, total_cell_num // 2)
 
         cell = [random.randint(0, height - 1), random.randint(0, width - 1)]
         m[cell[0]][cell[1]] = self.path_symbol

@@ -84,7 +84,7 @@ class TreeStructure:
 
     def connected_tree(self, vertex_count):
         maximal_children_count = random.randint(
-            1, min(self.maximal_children_count, vertex_count - 1))
+            0, min(self.maximal_children_count, vertex_count - 1))
 
         t = self.generate_tree(vertex_count, maximal_children_count)
 
@@ -100,7 +100,7 @@ class TreeStructure:
 
     def balanced_tree(self, vertex_count):
         maximal_children_count = random.randint(
-            1, min(self.maximal_children_count, vertex_count - 1))
+            0, min(self.maximal_children_count, vertex_count - 1))
 
         t = nx.full_rary_tree(maximal_children_count, vertex_count)
 

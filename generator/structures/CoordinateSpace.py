@@ -32,7 +32,7 @@ class CoordinateSpace:
 
         g = nx.DiGraph()
 
-        if edge_count >= maximal_edges / 2:
+        if edge_count >= maximal_edges // 2:
             x = self.width_range[0]
             y = self.height_range[0]
             edge_index = 0

@@ -64,7 +64,7 @@ class GraphStructure:
         else:
             maximal_edges = vertex_count * \
                 (vertex_count - 1) if self.directed else vertex_count * \
-                (vertex_count - 1) / 2
+                (vertex_count - 1) // 2
             if self.loop:
                 maximal_edges += vertex_count
 
@@ -78,7 +78,7 @@ class GraphStructure:
             g = nx.empty_graph(vertex_count, nx.DiGraph()
                                if self.directed else nx.Graph())
 
-        if not self.multi and edge_count >= maximal_edges / 2:
+        if not self.multi and edge_count >= maximal_edges // 2:
             x = 0
             y = 0
             edge_index = 0
@@ -126,7 +126,7 @@ class GraphStructure:
         else:
             maximal_edges = vertex_count * \
                 (vertex_count - 1) if self.directed else vertex_count * \
-                (vertex_count - 1) / 2
+                (vertex_count - 1) // 2
 
             maximal = min(maximal_edges, self.edge_count_range[1])
             if self.loop:
@@ -137,7 +137,7 @@ class GraphStructure:
 
             edge_count = random.randint(minimal, maximal)
 
-        if not self.multi and edge_count >= maximal_edges / 2:
+        if not self.multi and edge_count >= maximal_edges // 2:
             x = 0
             y = 0
             edge_index = 0
@@ -194,7 +194,7 @@ class GraphStructure:
 
             g = nx.MultiGraph(g)
         else:
-            maximal_edges = vertex_count * (vertex_count - 1) / 2
+            maximal_edges = vertex_count * (vertex_count - 1) // 2
             maximal = min(maximal_edges, self.edge_count_range[1])
 
             if minimal > maximal:
@@ -202,7 +202,7 @@ class GraphStructure:
 
             edge_count = random.randint(minimal, maximal)
 
-        if not self.multi and edge_count >= maximal_edges / 2:
+        if not self.multi and edge_count >= maximal_edges // 2:
             x = 0
             y = 0
             edge_index = 0
@@ -248,7 +248,7 @@ class GraphStructure:
             minimal_edges = vertex_count
             minimal = max(minimal_edges, self.edge_count_range[0])
 
-            maximal_edges = vertex_count * (vertex_count - 1) / 2 + 1
+            maximal_edges = vertex_count * (vertex_count - 1) // 2 + 1
             maximal = min(maximal_edges, self.edge_count_range[1])
 
             if minimal > maximal:
@@ -303,9 +303,9 @@ class GraphStructure:
             nx.add_cycle(g, cycle_nodes)
 
             new_maximal_edges = cycle_nodes_count + (vertex_count - cycle_nodes_count) * (
-                vertex_count - cycle_nodes_count - 1) / 2 + cycle_nodes_count * (vertex_count - cycle_nodes_count)
+                vertex_count - cycle_nodes_count - 1) // 2 + cycle_nodes_count * (vertex_count - cycle_nodes_count)
 
-            if edge_count >= new_maximal_edges / 2:
+            if edge_count >= new_maximal_edges // 2:
                 x_ind = 0
                 y = 0
                 edge_index = 0
@@ -436,9 +436,6 @@ class GraphStructure:
         first_set = random.randint(0, vertex_count - 1)
         second_set = vertex_count - first_set
 
-        if first_set == 0 or second_set == 0:
-            return nx.empty_graph(vertex_count)
-
         minimal_edges = 0
         minimal = max(minimal_edges, self.edge_count_range[0])
 
@@ -464,7 +461,7 @@ class GraphStructure:
             g = nx.empty_graph(vertex_count, nx.DiGraph()
                                if self.directed else nx.Graph())
 
-        if not self.multi and edge_count >= maximal_edges / 2:
+        if not self.multi and edge_count >= maximal_edges // 2:
             x = 0
             y = first_set
             starter = first_set

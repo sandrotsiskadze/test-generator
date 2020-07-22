@@ -302,7 +302,7 @@ def flow_network(request):
     global reduce_data
     reduce_data = edges
     global answer_data
-    answer_data = (vertex_count, edge_count, source, sink, nodes, edges)
+    answer_data = (vertex_count, edge_count, source, sink, edges)
     global is_str
     is_str = False
     global is_arr_tree
@@ -369,7 +369,10 @@ def sequence(request):
     global reduce_data
     reduce_data = s
     global answer_data
-    answer_data = (element_count, s, new_query_count, q)
+    if q:
+        answer_data = (element_count, s, new_query_count, q)
+    else:
+        answer_data = (element_count, s)
     global is_str
     is_str = False
     global is_arr_tree

@@ -14,13 +14,13 @@ class FlowNetwork:
                 self.vertex_count_range[0], self.vertex_count_range[1])
 
             minimal_edges = vertex_count - 1
-            maximal_edges = vertex_count * (vertex_count - 1) / 2
+            maximal_edges = vertex_count * (vertex_count - 1) // 2
 
             minimal = max(minimal_edges, self.edge_count_range[0])
             maximal = min(maximal_edges, self.edge_count_range[1])
 
             if minimal > maximal:
-                return nx.Graph()
+                return (0, 0, nx.Graph())
 
             edge_count = random.randint(minimal, maximal)
 
