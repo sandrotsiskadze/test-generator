@@ -74,7 +74,6 @@ Ext.define('test.controllers.MainController', {
     onLanguageChange: function(cmp) {
         var language = cmp.language;
 
-        debugger
         if(Helpers.getCookie("language") != language) {
             Helpers.setCookie("language", language);
             window.location.reload();

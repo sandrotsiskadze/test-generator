@@ -46,15 +46,15 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "VertexCountRangeFrom",
                               name: "VertexCountRangeFrom",
                               minValue: 0,
-                              maxValue: 100000,
+                              maxValue: 200000,
                               emptyText: "Vertex Count Range From",
                               allowDecimals: false,
                               allowBlank: false,
                               listeners: {
                                 change: function(el) {
                                   el.up("flowNetworkMainView")
-                                  .down("[name=VertexCountRangeTo]")
-                                  .minValue=el.getValue();
+                                    .down("[name=VertexCountRangeTo]")
+                                    .minValue=el.getValue();
                                 },
                               },
                             },
@@ -65,7 +65,7 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "VertexCountRangeTo",
                               name: "VertexCountRangeTo",
                               minValue: 0,
-                              maxValue: 100000,
+                              maxValue: 200000,
                               emptyText: "Vertex Count Range To",
                               labelStyle: "text-align:right;",
                               allowDecimals: false,
@@ -73,8 +73,8 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               listeners: {
                                 change: function(el) {
                                   el.up("flowNetworkMainView")
-                                  .down("[name=VertexCountRangeFrom]")
-                                  .maxValue=el.getValue();
+                                    .down("[name=VertexCountRangeFrom]")
+                                    .maxValue=el.getValue();
                                 },
                               },
                             },
@@ -95,7 +95,7 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "EdgeCountRangeFrom",
                               name: "EdgeCountRangeFrom",
                               minValue: 0,
-                              maxValue: 100000,
+                              maxValue: 200000,
                               emptyText: "Edge Count Range From",
                               labelStyle: "text-align:right;",
                               allowDecimals: false,
@@ -103,8 +103,8 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               listeners: {
                                 change: function(el) {
                                   el.up("flowNetworkMainView")
-                                  .down("[name=EdgeCountRangeTo]")
-                                  .minValue=el.getValue();
+                                    .down("[name=EdgeCountRangeTo]")
+                                    .minValue=el.getValue();
                                 },
                               },
                             },
@@ -115,7 +115,7 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               langIdentifier: "EdgeCountRangeTo",
                               name: "EdgeCountRangeTo",
                               minValue: 0,
-                              maxValue: 100000,
+                              maxValue: 200000,
                               emptyText: "Edge Count Range From",
                               labelStyle: "text-align:right;",
                               allowDecimals: false,
@@ -123,8 +123,8 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                               listeners: {
                                 change: function(el) {
                                   el.up("flowNetworkMainView")
-                                  .down("[name=EdgeCountRangeFrom]")
-                                  .minValue=el.getValue();
+                                    .down("[name=EdgeCountRangeFrom]")
+                                    .maxValue=el.getValue();
                                 },
                               },
                             },
@@ -181,6 +181,7 @@ Ext.define("test.view.main.Main.FlowNetworkMainView", {
                           name: "Answer",
                           labelAlign: "top",
                           fieldLabel: "Answer",
+                          submitValue: false,
                         },
                       ],
                     },

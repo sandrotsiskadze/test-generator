@@ -74,7 +74,6 @@ Ext.define("test.view.main.Main.GraphMainView", {
                                 },
                               ],
                             }),
-                            // allowBlank: false,
                           },
                           {
                             xtype: "combobox",

@@ -57,30 +57,37 @@ Ext.define('test.view.main.Main', {
             {
               xtype: "graphMainView",
               title: "Graph",
+              langIdentifier: "Graph",
             },
             {
               xtype: "treeMainView",
               title: "Tree",
+              langIdentifier: "Tree",
             },
             {
               xtype: "flowNetworkMainView",
               title: "Flow Network",
+              langIdentifier: "FlowNetwork",
             },
             {
               xtype: "sequenceMainView",
               title: "Sequence",
+              langIdentifier: "Sequence",
             },
             {
               xtype: "mazeMainView",
               title: "Maze",
+              langIdentifier: "Maze",
             },
             {
               xtype: "stringMainView",
               title: "String",
+              langIdentifier: "String",
             },
             {
               xtype: "coordinateSpaceMainView",
               title: "Coordinate Space",
+              langIdentifier: "CoordinateSpace",
             },
           ],
         });

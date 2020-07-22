@@ -55,6 +55,14 @@ Ext.define('test.utils.Helpers', {
             }
         });
 
+        Ext.each(parentContainer.query('panel'), function (cmp) {
+            var langIdentifier = cmp.langIdentifier;
+            if(!Ext.isEmpty(langIdentifier)) {
+                var name = Helpers.getName(langIdentifier);
+                cmp.setTitle(name);
+            }
+        });
+
         // Ext.each(parentContainer.query('actioncolumn'), function (cmp) {
         //     if (cmp.readOnlyMode == undefined || cmp.readOnlyMode == true)
         //         cmp.setVisible(!readOnly);
@@ -140,7 +148,13 @@ Ext.define('test.utils.Helpers', {
             ["Map", "Map"],
             ["Filter", "Filter"],
             ["Reduce", "Reduce"],
-            ["Get_Answer", "Get Answer"]
+            ["Get_Answer", "Get Answer"],
+            ["Graph", "Graph"],
+            ["FlowNetwork", "Flow Network"],
+            ["Sequence", "Sequence"],
+            ["Maze", "Maze"],
+            ["String", "String"],
+            ["CoordinateSpace", "Coordinate Space"]
         ];
 
         var value = map.find(function (el) {
@@ -166,7 +180,7 @@ Ext.define('test.utils.Helpers', {
             ["VertexCountRangeFrom", "წვეროების რაოდენობა დან"],
             ["VertexCountRangeTo", "წვეროების რაოდენობა მდე"],
             ["EdgeCountRangeFrom", "წიბოების რაოდენობა დან"],
-            ["EdgeCountRangeTo", "წიბოეიბს რაოდენობა მდე"],
+            ["EdgeCountRangeTo", "წიბოების რაოდენობა მდე"],
             ["Generate", "გენერირება"],
             ["Answer", "პასუხი"],
             ["UserCode", "თქვენი კოდი"],
@@ -210,7 +224,13 @@ Ext.define('test.utils.Helpers', {
             ["Map", "ფუნქცია"],
             ["Filter", "ფილტრი"],
             ["Reduce", "დაყვანა"],
-            ["Get_Answer", "პასუხის მიღება"]
+            ["Get_Answer", "პასუხის მიღება"],
+            ["Graph", "გრაფი"],
+            ["FlowNetwork", "ნაკადი"],
+            ["Sequence", "მიმდევრობა"],
+            ["Maze", "ლაბირინთი"],
+            ["String", "სტრიქონი"],
+            ["CoordinateSpace", "ვექტორული კოორდინატები"]
         ];
 
         var value = map.find(function (el) {

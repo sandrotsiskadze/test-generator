@@ -141,10 +141,34 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                                 el.up("sequenceMainView")
                                   .down("[name=PermutationNumber]")
                                   .disable();
+                                el.up("sequenceMainView")
+                                  .down("[name=ElementCountRangeFrom]")
+                                  .enable();
+                                el.up("sequenceMainView")
+                                  .down("[name=ElementCountRangeTo]")
+                                  .enable();
+                                el.up("sequenceMainView")
+                                  .down("[name=ElementValueRangeFrom]")
+                                  .enable();
+                                el.up("sequenceMainView")
+                                  .down("[name=ElementValueRangeTo]")
+                                  .enable();
                               } else {
                                 el.up("sequenceMainView")
                                   .down("[name=PermutationNumber]")
                                   .enable();
+                                el.up("sequenceMainView")
+                                  .down("[name=ElementCountRangeFrom]")
+                                  .disable();
+                                el.up("sequenceMainView")
+                                  .down("[name=ElementCountRangeTo]")
+                                  .disable();
+                                el.up("sequenceMainView")
+                                  .down("[name=ElementValueRangeFrom]")
+                                  .disable();
+                                el.up("sequenceMainView")
+                                  .down("[name=ElementValueRangeTo]")
+                                  .disable();
                               }
                             },
                           },
@@ -202,7 +226,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                           margin: "0 0 0 5",
                           disabled: true,
                           minValue: 0,
-                          maxValue: 1000000,
+                          maxValue: 200000,
                           emptyText: "Query Count",
                           allowDecimals: false,
                           allowBlank: false,
@@ -238,6 +262,7 @@ Ext.define("test.view.main.Main.SequenceMainView", {
                       name: "Answer",
                       labelAlign: "top",
                       fieldLabel: "Answer",
+                      submitValue: false,
                     },
                   ],
                 },

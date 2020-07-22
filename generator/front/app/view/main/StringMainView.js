@@ -121,6 +121,7 @@ Ext.define("test.view.main.Main.StringMainView", {
                       langIdentifier:"Answer",
                       labelAlign: "top",
                       fieldLabel: "Answer",
+                      submitValue: false,
                     },
                   ],
                 },

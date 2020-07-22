@@ -38,18 +38,20 @@ Ext.define("test.view.main.Main.CoordinateSpaceMainView", {
                             flex: 1,
                             margin: "0 5 0 0",
                             labelWidth: 220,
-                            minValue: -100000,
-                            maxValue: 100000,
+                            minValue: -200000,
+                            maxValue: 200000,
                             emptyText: "Dimension-X From",
                             allowDecimals: false,
                             allowBlank: false,
                             listeners: {
                               change: function (el) {
-                                el.up("mazeMainView")
-                                  .down("[name=DimensionXTo]")
-                                  .minValue=el.getValue();
+                                to=el.up("coordinateSpaceMainView")
+                                    .down("[name=DimensionXTo]");
+                                to.minValue=el.getValue();
+                                to.maxValue=el.getValue()+200000;
                               },
                             },
+                            allowBlank: false,
                           },
                           {
                             xtype: "numberfield",
@@ -58,18 +60,20 @@ Ext.define("test.view.main.Main.CoordinateSpaceMainView", {
                             flex: 1,
                             margin: "0 0 0 5",
                             labelWidth: 220,
-                            minValue: -100000,
-                            maxValue: 100000,
+                            minValue: -200000,
+                            maxValue: 200000,
                             emptyText: "Dimension-X To",
                             allowDecimals: false,
                             allowBlank: false,
                             listeners: {
                               change: function (el) {
-                                el.up("mazeMainView")
-                                  .down("[name=DimensionXFrom]")
-                                  .maxValue=el.getValue();
+                                from=el.up("coordinateSpaceMainView")
+                                    .down("[name=DimensionXFrom]");
+                                from.maxValue=el.getValue();
+                                from.minValue=el.getValue()-200000;
                               },
                             },
+                            allowBlank: false,
                           },
                         ],
                       },
@@ -88,18 +92,20 @@ Ext.define("test.view.main.Main.CoordinateSpaceMainView", {
                             flex: 1,
                             margin: "0 5 0 0",
                             labelWidth: 220,
-                            minValue: -100000,
-                            maxValue: 100000,
+                            minValue: -200000,
+                            maxValue: 200000,
                             emptyText: "Dimension-Y From",
                             allowDecimals: false,
                             allowBlank: false,
                             listeners: {
                               change: function (el) {
-                                el.up("mazeMainView")
-                                  .down("[name=DimensionYTo]")
-                                  .minValue=el.getValue();
+                                to=el.up("coordinateSpaceMainView")
+                                    .down("[name=DimensionYTo]");
+                                to.minValue=el.getValue();
+                                to.maxValue=el.getValue()+200000;
                               },
                             },
+                            allowBlank: false,
                           },
                           {
                             xtype: "numberfield",
@@ -108,18 +114,20 @@ Ext.define("test.view.main.Main.CoordinateSpaceMainView", {
                             flex: 1,
                             margin: "0 0 0 5",
                             labelWidth: 220,
-                            minValue: -100000,
-                            maxValue: 100000,
+                            minValue: -200000,
+                            maxValue: 200000,
                             emptyText: "Dimension-Y To",
                             allowDecimals: false,
                             allowBlank: false,
                             listeners: {
                               change: function (el) {
-                                el.up("mazeMainView")
-                                  .down("[name=DimensionYFrom]")
-                                  .maxValue=el.getValue();
+                                from=el.up("coordinateSpaceMainView")
+                                    .down("[name=DimensionYFrom]");
+                                from.maxValue=el.getValue();
+                                from.minValue=el.getValue()-200000;
                               },
                             },
+                            allowBlank: false,
                           },
                         ],
                       },
@@ -139,17 +147,18 @@ Ext.define("test.view.main.Main.CoordinateSpaceMainView", {
                             margin: "0 5 0 0",
                             labelWidth: 220,
                             minValue: 0,
-                            maxValue: 100000,
+                            maxValue: 200000,
                             emptyText: "Vector Count From",
                             allowDecimals: false,
                             allowBlank: false,
                             listeners: {
                               change: function (el) {
-                                el.up("mazeMainView")
+                                el.up("coordinateSpaceMainView")
                                   .down("[name=VectorCountTo]")
                                   .minValue=el.getValue();
                               },
                             },
+                            allowBlank: false,
                           },
                           {
                             xtype: "numberfield",
@@ -159,17 +168,18 @@ Ext.define("test.view.main.Main.CoordinateSpaceMainView", {
                             margin: "0 0 0 5",
                             labelWidth: 220,
                             minValue: 0,
-                            maxValue: 100000,
+                            maxValue: 200000,
                             emptyText: "Vector Count To",
                             allowDecimals: false,
                             allowBlank: false,
                             listeners: {
                               change: function (el) {
-                                el.up("mazeMainView")
+                                el.up("coordinateSpaceMainView")
                                   .down("[name=VectorCountFrom]")
                                   .maxValue=el.getValue();
                               },
                             },
+                            allowBlank: false,
                           },
                         ],
                       },
@@ -202,6 +212,7 @@ Ext.define("test.view.main.Main.CoordinateSpaceMainView", {
                         name: "Answer",
                         labelAlign: "top",
                         fieldLabel: "Answer",
+                        submitValue: false,
                       },
                     ],
                   },
