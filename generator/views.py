@@ -21,6 +21,8 @@ map_data = []
 reduce_data = []
 answer_data = ()
 is_str = False
+is_arr_tree = False
+is_maze = False
 
 
 @csrf_exempt
@@ -88,15 +90,24 @@ def graph(request):
 
     g = res
 
+    node_weights = []
     if vertex_weighted:
         nodes = list(g.nodes.data('weight'))
+        for node in nodes:
+            node_weights.append(node[1])
     else:
         nodes = list(g.nodes)
 
     if edge_weighted:
-        edges = list(g.edges.data('weight', keys=False))
+        if multi and (not one_cycle and not complete):
+            edges = list(g.edges.data('weight', keys=False))
+        else:
+            edges = list(g.edges.data('weight'))
     else:
-        edges = list(g.edges(keys=False))
+        if multi and (not one_cycle and not complete):
+            edges = list(g.edges(keys=False))
+        else:
+            edges = list(g.edges)
 
     vertex_count = len(nodes)
     edge_count = len(edges)
@@ -105,21 +116,28 @@ def graph(request):
     response += str(vertex_count) + '\n'
     response += str(edge_count) + '\n'
     if vertex_weighted:
-        for node in nodes:
-            response += str(node[1]) + '\n'
+        for node in node_weights:
+            response += str(node) + '\n'
     for edge in edges:
         response += str(edge).strip('()').replace(',', '') + '\n'
 
     global filter_data
-    global map_data
-    global reduce_data
-    global answer_data
-    global is_str
     filter_data = edges
+    global map_data
     map_data = edges
+    global reduce_data
     reduce_data = edges
-    answer_data = (vertex_count, edge_count, nodes, edges)
+    global answer_data
+    if vertex_weighted:
+        answer_data = (vertex_count, edge_count, node_weights, edges)
+    else:
+        answer_data = (vertex_count, edge_count, edges)
+    global is_str
     is_str = False
+    global is_arr_tree
+    is_arr_tree = False
+    global is_maze
+    is_maze = False
 
     return HttpResponse(response)
 
@@ -177,8 +195,11 @@ def tree(request):
     t = res[0]
     arr = res[1]
 
+    node_weights = []
     if vertex_weighted:
         nodes = list(t.nodes.data('weight'))
+        for node in nodes:
+            node_weights.append(node[1])
     else:
         nodes = list(t.nodes)
 
@@ -192,13 +213,14 @@ def tree(request):
 
     response = ''
     response += str(vertex_count) + '\n'
-    response += str(edge_count) + '\n'
     if arr:
-        response += str(arr)
+        response += str(len(arr)) + '\n'
+        response += str(arr).strip('[]').replace(',', '')
     else:
+        response += str(edge_count) + '\n'
         if vertex_weighted:
-            for node in nodes:
-                response += str(node[1]) + '\n'
+            for node in node_weights:
+                response += str(node) + '\n'
         for edge in edges:
             response += str(edge).strip('()').replace(',', '') + '\n'
 
@@ -206,18 +228,28 @@ def tree(request):
     global map_data
     global reduce_data
     global answer_data
-    global is_str
     if arr:
         filter_data = arr
         map_data = arr
         reduce_data = arr
-        answer_data = (vertex_count, edge_count, nodes, arr)
+        answer_data = (vertex_count, len(arr), arr)
     else:
-        filter_data = edges
-        map_data = edges
-        reduce_data = edges
-        answer_data = (vertex_count, edge_count, nodes, edges)
+        if vertex_weighted:
+            filter_data = edges
+            map_data = edges
+            reduce_data = edges
+            answer_data = (vertex_count, edge_count, node_weights, edges)
+        else:
+            filter_data = edges
+            map_data = edges
+            reduce_data = edges
+            answer_data = (vertex_count, edge_count, edges)
+    global is_str
     is_str = False
+    global is_arr_tree
+    is_arr_tree = True if arr else False
+    global is_maze
+    is_maze = False
 
     return HttpResponse(response)
 
@@ -264,15 +296,19 @@ def flow_network(request):
         response += str(edge).strip('()').replace(',', '') + '\n'
 
     global filter_data
-    global map_data
-    global reduce_data
-    global answer_data
-    global is_str
     filter_data = edges
+    global map_data
     map_data = edges
+    global reduce_data
     reduce_data = edges
+    global answer_data
     answer_data = (vertex_count, edge_count, source, sink, nodes, edges)
+    global is_str
     is_str = False
+    global is_arr_tree
+    is_arr_tree = False
+    global is_maze
+    is_maze = False
 
     return HttpResponse(response)
 
@@ -315,6 +351,7 @@ def sequence(request):
     q = res[1]
 
     element_count = len(s)
+    new_query_count = len(q)
 
     response = ''
     response += str(element_count) + '\n'
@@ -326,15 +363,19 @@ def sequence(request):
             response += str(element).strip('()').replace(',', '') + '\n'
 
     global filter_data
-    global map_data
-    global reduce_data
-    global answer_data
-    global is_str
     filter_data = s
+    global map_data
     map_data = s
+    global reduce_data
     reduce_data = s
-    answer_data = (element_count, s, query_count, q)
+    global answer_data
+    answer_data = (element_count, s, new_query_count, q)
+    global is_str
     is_str = False
+    global is_arr_tree
+    is_arr_tree = False
+    global is_maze
+    is_maze = False
 
     return HttpResponse(response)
 
@@ -350,12 +391,12 @@ def maze(request):
     mydata = ast.literal_eval(dict_str)
     if 'DimensionXFrom' in mydata and 'DimensionXTo' in mydata:
         if mydata['DimensionXFrom'] and mydata['DimensionXTo']:
-            height_range = (int(mydata['DimensionXFrom']), int(
+            width_range = (int(mydata['DimensionXFrom']), int(
                 mydata['DimensionXTo']))
     if 'DimensionYFrom' in mydata and 'DimensionYTo' in mydata:
         if mydata['DimensionYFrom'] and mydata['DimensionYTo']:
-            width_range = (int(mydata['DimensionYFrom']),
-                           int(mydata['DimensionYTo']))
+            height_range = (int(mydata['DimensionYFrom']),
+                            int(mydata['DimensionYTo']))
     if 'WallCharacter' in mydata:
         if mydata['WallCharacter']:
             wall_symbol = mydata['WallCharacter']
@@ -379,18 +420,23 @@ def maze(request):
     response += str(width) + '\n'
     response += str(height) + '\n'
     for i in m:
-        response += str(i).strip('[]').replace(',', '') + '\n'
+        response += str(i).strip('[]').replace(',',
+                                               '').replace(' ', '').replace('\'', '') + '\n'
 
     global filter_data
-    global map_data
-    global reduce_data
-    global answer_data
-    global is_str
     filter_data = m
+    global map_data
     map_data = m
+    global reduce_data
     reduce_data = m
+    global answer_data
     answer_data = (width, height, m)
+    global is_str
     is_str = False
+    global is_arr_tree
+    is_arr_tree = False
+    global is_maze
+    is_maze = True
 
     return HttpResponse(response)
 
@@ -424,15 +470,19 @@ def string_(request):
     response += s + '\n'
 
     global filter_data
-    global map_data
-    global reduce_data
-    global answer_data
-    global is_str
     filter_data = s
+    global map_data
     map_data = s
+    global reduce_data
     reduce_data = s
+    global answer_data
     answer_data = (alphabet_count, alphabet, element_count, s)
+    global is_str
     is_str = True
+    global is_arr_tree
+    is_arr_tree = False
+    global is_maze
+    is_maze = False
 
     return HttpResponse(response)
 
@@ -463,28 +513,29 @@ def coordinate_space(request):
 
     c = res
 
-    nodes = list(c.nodes)
+    vectors = list(c.edges)
 
-    edges = list(c.edges)
-
-    vertex_count = len(nodes)
-    edge_count = len(edges)
+    vector_count = len(vectors)
 
     response = ''
-    response += str(edge_count) + '\n'
-    for edge in edges:
-        response += str(edge).strip('()').replace(',', '') + '\n'
+    response += str(vector_count) + '\n'
+    for vector in vectors:
+        response += str(vector).strip('()').replace(',', '') + '\n'
 
     global filter_data
+    filter_data = vectors
     global map_data
+    map_data = vectors
     global reduce_data
+    reduce_data = vectors
     global answer_data
+    answer_data = (vector_count, vectors)
     global is_str
-    filter_data = edges
-    map_data = edges
-    reduce_data = edges
-    answer_data = (edge_count, edges)
     is_str = False
+    global is_arr_tree
+    is_arr_tree = False
+    global is_maze
+    is_maze = False
 
     return HttpResponse(response)
 
@@ -528,9 +579,16 @@ def code(request):
     if mydata['UserChoice'] == '3' or mydata['UserChoice'] == '4':
         response = str(res)
     else:
-        for x in res:
-            response += str(x) if is_str else str(x).strip(
-                '()').strip('[]').replace(',', '') + '\n'
+        if is_maze:
+            for i in res:
+                response += str(i).strip('[]').replace(',',
+                                                    '').replace(' ', '').replace('\'', '') + '\n'
+        elif is_arr_tree:
+            response += str(res).strip('[]').replace(',', '')
+        else:
+            for x in res:
+                response += str(x) if is_str else str(x).strip(
+                    '()').strip('[]').replace(',', '') + '\n'
 
     return HttpResponse(response)
 

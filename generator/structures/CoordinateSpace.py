@@ -11,8 +11,14 @@ class CoordinateSpace:
     def get_vectors(self):
         width = self.width_range[1] - self.width_range[0]
         height = self.height_range[1] - self.height_range[0]
+
+        maximal_vectors = width * height
+
+        if self.vector_count_range[0] > min(maximal_vectors, self.vector_count_range[1]):
+            return nx.Graph()
+
         vector_count = random.randint(
-            self.vector_count_range[0], self.vector_count_range[1])
+            self.vector_count_range[0], min(maximal_vectors, self.vector_count_range[1]))
 
         return self.generate_vectors(width, height, vector_count)
 

@@ -26,7 +26,7 @@ class GraphStructure:
             self.vertex_count_range[0], self.vertex_count_range[1])
 
         if vertex_count == 0:
-            return nx.Graph()
+            return nx.MultiGraph() if self.multi else nx.Graph()
 
         if self.connected:
             g = self.connected_graph(vertex_count)
@@ -53,6 +53,9 @@ class GraphStructure:
         minimal = max(minimal_edges, self.edge_count_range[0])
 
         if self.multi:
+            if minimal > self.edge_count_range[1]:
+                return nx.MultiGraph() if self.multi else nx.Graph()
+
             edge_count = random.randint(
                 minimal, self.edge_count_range[1])
 
@@ -68,7 +71,7 @@ class GraphStructure:
             maximal = min(maximal_edges, self.edge_count_range[1])
 
             if minimal > maximal:
-                return nx.Graph()
+                return nx.MultiGraph() if self.multi else nx.Graph()
 
             edge_count = random.randint(minimal, maximal)
 
@@ -113,6 +116,9 @@ class GraphStructure:
         minimal = max(minimal_edges, self.edge_count_range[0])
 
         if self.multi:
+            if minimal > self.edge_count_range[1]:
+                return nx.MultiGraph() if self.multi else nx.Graph()
+            
             edge_count = random.randint(
                 minimal, self.edge_count_range[1])
 
@@ -127,7 +133,7 @@ class GraphStructure:
                 maximal_edges += vertex_count
 
             if minimal > maximal:
-                return nx.Graph()
+                return nx.MultiGraph() if self.multi else nx.Graph()
 
             edge_count = random.randint(minimal, maximal)
 
@@ -180,6 +186,9 @@ class GraphStructure:
         minimal = max(minimal_edges, self.edge_count_range[0])
 
         if self.multi:
+            if minimal > self.edge_count_range[1]:
+                return nx.MultiGraph() if self.multi else nx.Graph()
+
             edge_count = random.randint(
                 minimal, self.edge_count_range[1])
 
@@ -189,7 +198,7 @@ class GraphStructure:
             maximal = min(maximal_edges, self.edge_count_range[1])
 
             if minimal > maximal:
-                return nx.Graph()
+                return nx.MultiGraph() if self.multi else nx.Graph()
 
             edge_count = random.randint(minimal, maximal)
 
@@ -233,7 +242,7 @@ class GraphStructure:
 
     def one_cycle_graph(self, vertex_count):
         if vertex_count == 1 and not self.loop:
-            return nx.Graph()
+            return nx.MultiGraph() if self.multi else nx.Graph()
 
         if self.directed:
             minimal_edges = vertex_count
@@ -243,7 +252,7 @@ class GraphStructure:
             maximal = min(maximal_edges, self.edge_count_range[1])
 
             if minimal > maximal:
-                return nx.Graph()
+                return nx.MultiGraph() if self.multi else nx.Graph()
 
             edge_count = random.randint(minimal, maximal)
 
@@ -415,13 +424,14 @@ class GraphStructure:
         return g
 
     def complete_graph(self, vertex_count):
+        vertex_count = min(440, vertex_count)
         g = nx.complete_graph(vertex_count, nx.DiGraph()
                               if self.directed else nx.Graph())
         return g
 
     def bipartite_graph(self, vertex_count):
         if vertex_count == 1:
-            return nx.Graph()
+            return nx.MultiGraph() if self.multi else nx.Graph()
 
         first_set = random.randint(0, vertex_count - 1)
         second_set = vertex_count - first_set
@@ -433,6 +443,9 @@ class GraphStructure:
         minimal = max(minimal_edges, self.edge_count_range[0])
 
         if self.multi:
+            if minimal > self.edge_count_range[1]:
+                return nx.MultiGraph() if self.multi else nx.Graph()
+
             edge_count = random.randint(
                 minimal, self.edge_count_range[1])
 
@@ -444,7 +457,7 @@ class GraphStructure:
             maximal = min(maximal_edges, self.edge_count_range[1])
 
             if minimal > maximal:
-                return nx.Graph()
+                return nx.MultiGraph() if self.multi else nx.Graph()
 
             edge_count = random.randint(minimal, maximal)
 

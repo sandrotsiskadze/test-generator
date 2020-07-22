@@ -11,8 +11,8 @@ class Maze:
 
     def get_maze(self):
         width = random.randint(self.width_range[0], self.width_range[1])
-        height = random.randint(
-            self.height_range[0], self.height_range[1])
+        height = random.randint(self.height_range[0], self.height_range[1])
+
         if self.connected:
             m = self.connected_maze(width, height)
         else:
@@ -23,7 +23,7 @@ class Maze:
     def default_maze(self, width, height):
         m = [[self.wall_symbol] * width for _ in range(height)]
         total_cell_num = width * height
-        path_num = random.randint(0, total_cell_num)
+        path_num = random.randint(0, total_cell_num / 2)
         cells = []
         for i in range(height):
             for j in range(width):
@@ -37,25 +37,32 @@ class Maze:
     def connected_maze(self, width, height):
         m = [[self.wall_symbol] * width for _ in range(height)]
         total_cell_num = width * height
-        path_num = random.randint(0, total_cell_num)
-        cells = []
-        for i in range(height):
-            for j in range(width):
-                cells.append((i, j))
-        fringe = []
-        start = (random.randint(0, height - 1), random.randint(0, width - 1))
-        fringe.append(start)
-        for _ in range(path_num):
-            cell_ind = random.randint(0, len(fringe) - 1)
-            cell = fringe[cell_ind]
-            m[cell[0]][cell[1]] = self.path_symbol
-            if cell[0] > 0 and m[cell[0] - 1][cell[1]] != self.path_symbol:
-                fringe.append((cell[0] - 1, cell[1]))
-            if cell[0] < height - 1 and m[cell[0] + 1][cell[1]] != self.path_symbol:
-                fringe.append((cell[0] + 1, cell[1]))
-            if cell[1] > 0 and m[cell[0]][cell[1] - 1] != self.path_symbol:
-                fringe.append((cell[0], cell[1] - 1))
-            if cell[1] < width - 1 and m[cell[0]][cell[1] + 1] != self.path_symbol:
-                fringe.append((cell[0], cell[1] + 1))
-            del fringe[cell_ind]
+        path_num = random.randint(0, total_cell_num / 2)
+
+        cell = [random.randint(0, height - 1), random.randint(0, width - 1)]
+        m[cell[0]][cell[1]] = self.path_symbol
+
+        past_direction = random.randint(0, 3)
+
+        number_of_path = 0
+        while number_of_path < path_num:
+            direction = random.randint(0, 4)
+            if direction == 4:
+                direction = past_direction
+            if direction == 0:
+                if cell[0] != 0:
+                    cell[0] -= 1
+            elif direction == 1:
+                if cell[0] != height - 1:
+                    cell[0] += 1
+            elif direction == 2:
+                if cell[1] != 0:
+                    cell[1] -= 1
+            else:
+                if cell[1] != width - 1:
+                    cell[1] += 1
+            if m[cell[0]][cell[1]] == self.wall_symbol:
+                m[cell[0]][cell[1]] = self.path_symbol
+                number_of_path += 1
+            past_direction = direction
         return m
