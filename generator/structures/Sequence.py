@@ -39,6 +39,6 @@ class Sequence:
     def generate_queries(self, element_count):
         maximal_query = element_count * (element_count - 1) // 2
         g_struct = gr.GraphStructure(vertex_count_range=(
-            element_count, element_count), edge_count_range=(0, min(maximal_query, self.query_count)))
+            element_count, element_count), edge_count_range=(1, min(maximal_query, self.query_count)))
         g = g_struct.get_graph()
         return list(g.edges)

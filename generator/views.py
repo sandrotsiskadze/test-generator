@@ -358,7 +358,7 @@ def sequence(request):
     for element in s:
         response += str(element) + '\n'
     if q:
-        response += str(query_count) + '\n'
+        response += str(new_query_count) + '\n'
         for element in q:
             response += str(element).strip('()').replace(',', '') + '\n'
 
@@ -579,13 +579,21 @@ def code(request):
                 return HttpResponse(e)
 
     response = ''
-    if mydata['UserChoice'] == '3' or mydata['UserChoice'] == '4':
+    if mydata['UserChoice'] == '4':
         response = str(res)
+    elif mydata['UserChoice'] == '3':
+        if is_str:
+            response += str(res)
+        elif is_maze:
+            response += str(res).strip('[]').replace(',',
+                                                     '').replace(' ', '').replace('\'', '') + '\n'
+        else:
+            response = str(res).strip('()').replace(',', '') + '\n'
     else:
         if is_maze:
             for i in res:
                 response += str(i).strip('[]').replace(',',
-                                                    '').replace(' ', '').replace('\'', '') + '\n'
+                                                       '').replace(' ', '').replace('\'', '') + '\n'
         elif is_arr_tree:
             response += str(res).strip('[]').replace(',', '')
         else:

@@ -46,8 +46,8 @@ class Maze:
 
         number_of_path = 0
         while number_of_path < path_num:
-            direction = random.randint(0, 4)
-            if direction == 4:
+            direction = random.randint(0, 5)
+            if direction == 4 or direction == 5:
                 direction = past_direction
             if direction == 0:
                 if cell[0] != 0:

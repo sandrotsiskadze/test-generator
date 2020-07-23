@@ -108,6 +108,11 @@ class GraphStructure:
         return g
 
     def connected_graph(self, vertex_count):
+        if vertex_count == 1 and self.loop and not self.multi:
+            g = nx.MultiGraph() if self.multi else nx.Graph()
+            g.add_edge(0 ,0)
+            return g
+
         g = nx.random_tree(vertex_count)
         if self.directed:
             g = self.shuffle(g)
@@ -182,6 +187,9 @@ class GraphStructure:
     def acyclic_graph(self, vertex_count):
         g = nx.random_tree(vertex_count)
 
+        if vertex_count == 1 and self.loop:
+            return nx.MultiGraph() if self.multi else nx.Graph()
+
         minimal_edges = vertex_count - 1
         minimal = max(minimal_edges, self.edge_count_range[0])
 
@@ -243,6 +251,11 @@ class GraphStructure:
     def one_cycle_graph(self, vertex_count):
         if vertex_count == 1 and not self.loop:
             return nx.MultiGraph() if self.multi else nx.Graph()
+
+        if vertex_count == 1 and self.loop:
+            g = nx.Graph()
+            g.add_edge(0 ,0)
+            return g
 
         if self.directed:
             minimal_edges = vertex_count
