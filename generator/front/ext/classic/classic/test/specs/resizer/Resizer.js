@@ -1,6 +1,6 @@
-describe('Ext.resizer.Resizer', function () {
+topSuite("Ext.resizer.Resizer", ['Ext.window.Window', 'Ext.form.field.TextArea'], function() {
     var resizer, target,
-    testIt = Ext.isWebKit ? it : xit;
+        testIt = Ext.isWebKit ? it : xit;
 
     function makeResizer(cfg) {
         target = new Ext.Component(Ext.apply({
@@ -13,14 +13,14 @@ describe('Ext.resizer.Resizer', function () {
         });
     }
 
-    afterEach(function () {
+    afterEach(function() {
         Ext.destroy(resizer, target);
         resizer = target = null;
     });
 
-    describe('init', function () {
-        describe('when target el needs to be wrapped', function () {
-            beforeEach(function () {
+    describe('init', function() {
+        describe('when target el needs to be wrapped', function() {
+            beforeEach(function() {
                 makeResizer({
                     autoEl: {
                         tag: 'textarea',
@@ -29,20 +29,20 @@ describe('Ext.resizer.Resizer', function () {
                 });
             });
 
-            it('should be given an `originalTarget` property', function () {
+            it('should be given an `originalTarget` property', function() {
                 expect(resizer.originalTarget).toBeDefined();
             });
 
-            it('should redefine the target to be an element', function () {
+            it('should redefine the target to be an element', function() {
                 expect(resizer.target.isElement).toBe(true);
             });
 
-            it('should not set originalTarget equalTo target', function () {
+            it('should not set originalTarget equalTo target', function() {
                 expect(resizer.originalTarget).not.toBe(resizer.target);
             });
         });
     });
-    
+
     describe('constraining', function() {
         // Synthetic event resizing only works on good browsers.
         // Code tested is not browser dependent however.
@@ -58,14 +58,39 @@ describe('Ext.resizer.Resizer', function () {
                     title: 'Child Window'
                 })]
             });
-            
+
             window.show();
             jasmine.fireMouseEvent(window.resizer.east, 'mousedown');
-            jasmine.fireMouseEvent(document.body, 'mousemove', 200, 150);
+            jasmine.fireMouseEvent(document.body, 'mousemove', '+200', 150);
             jasmine.fireMouseEvent(document.body, 'mouseup');
-            
+
             // Window must be allowed to resize outside its owning Panel's bounds
             expect(window.getWidth()).toBe(300);
+            Ext.destroy(panel, window);
+        });
+
+        testIt('should have unselectable text on resize and selectable text on resize end', function() {
+            var window,
+                panel = new Ext.panel.Panel({
+                height: 200,
+                width: 200,
+                renderTo: document.body,
+                items: [window = new Ext.window.Window({
+                    height: 100,
+                    width: 100,
+                    title: 'Child Window'
+                })]
+            }),
+            clsSelectable = 'x-selectable',
+            clsUnselectable = 'x-unselectable';
+
+            window.show();
+            jasmine.fireMouseEvent(window.resizer.east, 'mousedown');
+            jasmine.fireMouseEvent(document.body, 'mousemove', '+200', 150);
+            expect(window.el.getAttribute('class')).toContain(clsUnselectable);
+            jasmine.fireMouseEvent(document.body, 'mouseup');
+            expect(window.el.getAttribute('class')).toContain(clsSelectable);
+            // Window must be allowed to resize outside its owning Panel's bounds
             Ext.destroy(panel, window);
         });
         testIt("should constrain to floatParent's targetEl if constrain config == true", function() {
@@ -81,10 +106,10 @@ describe('Ext.resizer.Resizer', function () {
                     title: 'Child Window'
                 })]
             });
-            
+
             window.show();
             jasmine.fireMouseEvent(window.resizer.east, 'mousedown');
-            jasmine.fireMouseEvent(document.body, 'mousemove', 200, 150);
+            jasmine.fireMouseEvent(document.body, 'mousemove', '+200', 150);
             jasmine.fireMouseEvent(document.body, 'mouseup');
 
             // Window must NOT be allowed to resize outside its owning Panel's bounds
@@ -126,16 +151,40 @@ describe('Ext.resizer.Resizer', function () {
                 items: panels,
                 renderTo: document.body
             });
-            
+
             var panel1Top = panels[1].getY();
-            
+
             jasmine.fireMouseEvent(panels[1].resizer.north, 'mousedown');
-            jasmine.fireMouseEvent(document.body, 'mousemove', 0, -50);
+            jasmine.fireMouseEvent(document.body, 'mousemove', 0, '-50');
             jasmine.fireMouseEvent(document.body, 'mouseup');
-            
+
             // Layout should have correctred the top
             expect(panels[1].getY()).toBe(panel1Top);
             outerPanel.destroy();
         });
     });
+
+    describe('resizable form field', function() {
+        it('should fill width when layout indicates full width should be used', function() {
+            var textareaOffset = 4,
+                textarea, panel;
+
+            panel = new Ext.panel.Panel({
+                renderTo: Ext.getBody(),
+                width: 500,
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                items: [textarea = new Ext.form.field.TextArea({
+                    resizable: true,
+                    resizeHandles: 's'
+                })]
+            });
+
+            expect(textarea.getEl().component.inputEl.getWidth()).toEqual(panel.getWidth() - textareaOffset);
+            panel.destroy();
+        });
+    });
+
 });

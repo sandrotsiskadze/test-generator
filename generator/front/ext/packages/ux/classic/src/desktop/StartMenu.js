@@ -1,6 +1,6 @@
 /**
  * Ext JS Library
- * Copyright(c) 2006-2014 Sencha Inc.
+ * Copyright(c) 2006-2020 Sencha Inc.
  * licensing@sencha.com
  * http://www.sencha.com/license
  * @class Ext.ux.desktop.StartMenu
@@ -49,11 +49,13 @@ Ext.define('Ext.ux.desktop.StartMenu', {
 
     addMenuItem: function() {
         var cmp = this.menu;
+
         cmp.add.apply(cmp, arguments);
     },
 
     addToolItem: function() {
         var cmp = this.toolbar;
+
         cmp.add.apply(cmp, arguments);
     }
 }); // StartMenu

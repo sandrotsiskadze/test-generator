@@ -23,7 +23,7 @@ Ext.define('Ext.util.sizemonitor.Scroll', {
     },
 
     constructor: function(config) {
-        this.onScroll = Ext.Function.bind(this.onScroll, this);
+        this.onScroll = this.onScroll.bind(this);
 
         this.callParent(arguments);
     },
@@ -35,12 +35,21 @@ Ext.define('Ext.util.sizemonitor.Scroll', {
         this.shrinkMonitor[method]('scroll', this.onScroll, true);
     },
 
-    forceRefresh: function() {
-        Ext.TaskQueue.requestRead('refresh', this, [true]);
-    },
-
-    onScroll: function() {
-        Ext.TaskQueue.requestRead('refresh', this);
+    onScroll: function(e) {
+        if (!this.destroyed) {
+            // if the scroll value has been changed in refreshMonitor has been changed
+            // then scroll event will be called for both expand and shrink monitors
+            // but again calling the refresh will be unnecessary
+            if (this.hasExpandMonitorScrollChanged && e.target === this.expandMonitor) {
+                delete this.hasExpandMonitorScrollChanged;
+            }
+            else if (this.hasShrinkMonitorScrollChanged && e.target === this.shrinkMonitor) {
+                delete this.hasShrinkMonitorScrollChanged;
+            }
+            else {
+                Ext.TaskQueue.requestRead('refresh', this);
+            }
+        }
     },
 
     refreshMonitors: function() {
@@ -49,20 +58,29 @@ Ext.define('Ext.util.sizemonitor.Scroll', {
             end = 1000000;
 
         if (expandMonitor && !expandMonitor.destroyed) {
+            // the performance improvement will only be appliable for IOS device
+            if (Ext.isiOS) {
+                this.hasExpandMonitorScrollChanged = true;
+            }
+
             expandMonitor.scrollLeft = end;
             expandMonitor.scrollTop = end;
         }
 
         if (shrinkMonitor && !shrinkMonitor.destroyed) {
+            if (Ext.isiOS) {
+                this.hasShrinkMonitorScrollChanged = true;
+            }
+
             shrinkMonitor.scrollLeft = end;
             shrinkMonitor.scrollTop = end;
         }
     },
-    
+
     destroy: function() {
         // This is a closure so Base destructor won't null it
         this.onScroll = null;
-        
+
         this.callParent();
     }
 });

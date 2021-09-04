@@ -1,14 +1,30 @@
-describe('Ext.grid.feature.GroupingSummary', function () {
+topSuite("Ext.grid.feature.GroupingSummary", [
+    'Ext.grid.Panel',
+    'Ext.data.reader.Xml',
+    'Ext.data.summary.Average',
+    'Ext.data.summary.Count',
+    'Ext.grid.column.Date',
+    'Ext.grid.column.Number'
+], function() {
     var data, grid, store, groupingSummary, columns, params, selector,
         synchronousLoad = true,
         proxyStoreLoad = Ext.data.ProxyStore.prototype.load,
         loadStore = function() {
             proxyStoreLoad.apply(this, arguments);
+
             if (synchronousLoad) {
                 this.flushLoad.apply(this, arguments);
             }
+
             return this;
         };
+
+    function completeWithData(data) {
+        Ext.Ajax.mockComplete({
+            status: 200,
+            responseText: Ext.JSON.encode(data)
+        });
+    }
 
     function createGrid(gridCfg, groupingSummaryCfg, columns, storeCfg) {
         data = [{
@@ -16,17 +32,17 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             subject: 'Math',
             mark: 84,
             allowance: 15.50
-        },{
+        }, {
             student: 'Student 1',
             subject: 'Science',
             mark: 72,
             allowance: 10.75
-        },{
+        }, {
             student: 'Student 2',
             subject: 'Math',
             mark: 96,
             allowance: 100.75
-        },{
+        }, {
             student: 'Student 2',
             subject: 'Science',
             mark: 68,
@@ -70,8 +86,9 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             dataIndex: 'student',
             text: 'Name',
             summaryType: 'count',
-            summaryRenderer: function (value, summaryData, field, metaData) {
+            summaryRenderer: function(value, summaryData, field, metaData) {
                 params = arguments;
+
                 return Ext.String.format('{0} student{1}', value, value !== 1 ? 's' : '');
             }
         }, {
@@ -81,7 +98,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             summaryType: 'average'
         }, {
             itemId: 'noDataIndexColumn',
-            summaryType: function (records, values) {
+            summaryType: function(records, values) {
                 var i = 0,
                     length = records.length,
                     total = 0,
@@ -91,9 +108,10 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                     record = records[i];
                     total += record.get('allowance');
                 }
+
                 return total;
             },
-            summaryRenderer: function (value, summaryData, field, metaData) {
+            summaryRenderer: function(value, summaryData, field, metaData) {
                 return Ext.util.Format.usMoney(value || metaData.record.get('allowance'));
             },
             renderer: function(value, metaData, record, rowIdx, colIdx, store, view) {
@@ -141,8 +159,8 @@ describe('Ext.grid.feature.GroupingSummary', function () {
         Ext.data.Model.schema.clear();
     });
 
-    describe('summaryRenderer', function () {
-        it('should be passed the expected function parameters', function () {
+    describe('summaryRenderer', function() {
+        it('should be passed the expected function parameters', function() {
             // Note that we're only capturing the values for the second group.
             createGrid();
 
@@ -162,7 +180,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             expect(params[3].tdCls).toBeDefined();
         });
 
-        it('should be able to read the data from the summary record when there is no column.dataIndex', function () {
+        it('should be able to read the data from the summary record when there is no column.dataIndex', function() {
             var node;
 
             createGrid();
@@ -174,7 +192,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             expect((node.textContent || node.innerText).replace(/\r\n?|\n/g, '')).toBe('Student 296$100.752 students90$116.25');
         });
 
-        it('should update when group records are removed', function () {
+        it('should update when group records are removed', function() {
             var mathGroup;
 
             createGrid();
@@ -247,18 +265,18 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             store.first().set('mark', 0);
             toggle();
 
-            var row = grid.getView().getEl().select(selector).first(),
-                cell = row.down(grid.down('#markColumn').getCellSelector());
+            var row = grid.getView().getEl().dom.querySelector(selector),
+                cell = row.querySelector(grid.down('#markColumn').getCellSelector());
 
+            var content = cell.querySelector(grid.getView().innerSelector).innerHTML;
 
-            var content = cell.down(grid.getView().innerSelector).dom.innerHTML;
             expect(content).toBe('48');
         });
     });
 
-    describe('when the view is refreshed', function () {
+    describe('when the view is refreshed', function() {
         function expectIt(data) {
-            it('should retain the summary feature row information in the feature cache', function () {
+            it('should retain the summary feature row information in the feature cache', function() {
                 // Get the cached information that the feature is retaining for the Math group.
                 var groupInfo = groupingSummary.getMetaGroup(store.getGroups().getAt(0)),
                     record = groupInfo.aggregateRecord;
@@ -268,17 +286,17 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                 expect(record.get('noDataIndexColumn')).toBe(data.noDataIndexColumn);
             });
 
-            it('should retain the summary feature row information in the view', function () {
+            it('should retain the summary feature row information in the view', function() {
                 var summaryRow = grid.view.body.down('.x-grid-row-summary', true);
 
                 expect((summaryRow.textContent || summaryRow.innerText).replace(/\s/g, '')).toBe(data.view);
             });
         }
 
-        describe('when toggling the enabled/disabled state of the groups', function () {
+        describe('when toggling the enabled/disabled state of the groups', function() {
             // Note that the bug only happens when toggling twice (first to disable, then to enable).
             // See EXTJS-16141.
-            beforeEach(function () {
+            beforeEach(function() {
                 createGrid();
 
                 groupingSummary.disable();
@@ -293,15 +311,15 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             });
         });
 
-        describe('when filtering the store', function () {
+        describe('when filtering the store', function() {
             // See EXTJS-15267.
-            beforeEach(function () {
+            beforeEach(function() {
                 createGrid();
 
-                grid.store.addFilter({property: 'mark', operator: 'eq', value: 84})
+                grid.store.addFilter({ property: 'mark', operator: 'eq', value: 84 });
             });
 
-            describe('adding a filter', function () {
+            describe('adding a filter', function() {
                 expectIt({
                     student: 1,
                     mark: 84,
@@ -310,8 +328,8 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                 });
             });
 
-            describe('clearing the filters', function () {
-                beforeEach(function () {
+            describe('clearing the filters', function() {
+                beforeEach(function() {
                     grid.store.clearFilter();
                 });
 
@@ -325,13 +343,13 @@ describe('Ext.grid.feature.GroupingSummary', function () {
         });
     });
 
-    describe('reconfiguring', function () {
-        beforeEach(function () {
+    describe('reconfiguring', function() {
+        beforeEach(function() {
             createGrid();
         });
 
-        describe('new store', function () {
-            it('should update the summary row', function () {
+        describe('new store', function() {
+            it('should update the summary row', function() {
                 store = new Ext.data.Store({
                     model: 'spec.GroupingSummary',
                     groupField: 'subject',
@@ -340,7 +358,7 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                         subject: 'Math',
                         mark: 84,
                         allowance: 15.50
-                    },{
+                    }, {
                         student: 'Student 2',
                         subject: 'Science',
                         mark: 68,
@@ -360,15 +378,16 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             });
         });
 
-        describe('new columns', function () {
-            it('should update the summary row', function () {
+        describe('new columns', function() {
+            it('should update the summary row', function() {
                 grid.reconfigure(null, [{
                     itemId: 'studentColumn',
                     dataIndex: 'student',
                     text: 'Name',
                     summaryType: 'count',
-                    summaryRenderer: function (value, summaryData, field, metaData) {
+                    summaryRenderer: function(value, summaryData, field, metaData) {
                         params = arguments;
+
                         return Ext.String.format('{0} student{1}', value, value !== 1 ? 's' : '');
                     }
                 }, {
@@ -485,30 +504,27 @@ describe('Ext.grid.feature.GroupingSummary', function () {
         });
     });
 
-    describe('remoteRoot', function () {
-        function completeWithData(data) {
-            Ext.Ajax.mockComplete({
-                status: 200,
-                responseText: Ext.JSON.encode(data)
-            });
-        }
-
-        beforeEach(function () {
+    describe('remote summaries', function() {
+        beforeEach(function() {
             MockAjaxManager.addMethods();
+        });
 
-            createGrid(null, {
-                remoteRoot: 'summaryData'
-            }, null, {
+        afterEach(function() {
+            MockAjaxManager.removeMethods();
+        });
+
+        function createHarness(summaryCfg, readerCfg) {
+            createGrid(null, summaryCfg, null, {
                 remoteSort: true,
                 proxy: {
                     type: 'ajax',
                     url: 'data.json',
-                    reader: {
+                    reader: Ext.apply({
                         type: 'json',
                         rootProperty: 'data'
-                    }
+                    }, readerCfg)
                 },
-                grouper: {property: 'student'},
+                grouper: { property: 'student' },
                 data: null
             });
 
@@ -517,8 +533,8 @@ describe('Ext.grid.feature.GroupingSummary', function () {
             completeWithData({
                 data: data,
                 summaryData: [{
-                    allowance: 67,
-                    mark: 42,
+                    allowance: '67',
+                    mark: '42',
                     student: 'Student 1'
                 }, {
                     allowance: 100,
@@ -527,32 +543,242 @@ describe('Ext.grid.feature.GroupingSummary', function () {
                 }],
                 total: 4
             });
+        }
+
+        function tests() {
+            it('should correctly parse the summary data', function() {
+                expect(groupingSummary.summaryRows).toEqual([
+                    { allowance: 67, mark: 42, student: 'Student 1' },
+                    { allowance: 100, mark: 99, student: 'Student 2' }
+                ]);
+            });
+
+            it('should correctly render the data in the view', function() {
+                var rows = grid.view.body.query('.x-grid-row-summary');
+
+                expect((rows[0].textContent || rows[0].innerText).replace(/\s/g, '')).toBe('Student1students42$67.00');
+                expect((rows[1].textContent || rows[1].innerText).replace(/\s/g, '')).toBe('Student2students99$100.00');
+            });
+
+            it('should create a summaryData object for each group', function() {
+                var summaryData = groupingSummary.summaryData;
+
+                expect(summaryData['Student 1']).toBeDefined();
+                expect(summaryData['Student 2']).toBeDefined();
+            });
+
+            it('should create a metaGroupCache entry for each group', function() {
+                var metaGroupCache = groupingSummary.getCache();
+
+                expect(metaGroupCache['Student 1']).toBeDefined();
+                expect(metaGroupCache['Student 2']).toBeDefined();
+            });
+        }
+
+        describe('remoteRoot', function() {
+            beforeEach(function() {
+                createHarness({
+                    remoteRoot: 'summaryData'
+                });
+            });
+
+            tests();
         });
 
-        afterEach(function () {
-            MockAjaxManager.removeMethods();
+        describe('summaryRootProperty', function() {
+            beforeEach(function() {
+                createHarness({}, {
+                    summaryRootProperty: 'summaryData'
+                });
+            });
+
+            tests();
+        });
+    });
+
+    describe('xml data', function() {
+        var data = [
+            { itemId: 101, saleDate: '2019-10-11', saleValue: 15.50, saleQty: 10 },
+            { itemId: 101, saleDate: '2019-10-18', saleValue: 14.60, saleQty: 11 },
+            { itemId: 101, saleDate: '2019-10-22', saleValue: 13.60, saleQty: 9 },
+            { itemId: 101, saleDate: '2019-11-14', saleValue: 10.60, saleQty: 13 },
+            { itemId: 202, saleDate: '2019-10-01', saleValue: 11.20, saleQty: 12 },
+            { itemId: 202, saleDate: '2019-10-17', saleValue: 12.80, saleQty: 15 },
+            { itemId: 202, saleDate: '2019-10-21', saleValue: 16.80, saleQty: 8 }
+        ];
+
+        function sum(itemId, field) {
+            var ret = 0;
+
+            for (var i = data.length; i-- > 0; /* empty */) {
+                if (data[i].itemId === itemId) {
+                    ret += data[i][field];
+                }
+            }
+
+            return ret;
+        }
+
+        var summary = [
+            {
+                itemId: 101,
+                saleDate: 4,
+                saleValue: sum(101, 'saleValue'),
+                saleQty: sum(101, 'saleQty')
+            },
+            {
+                itemId: 202,
+                saleDate: 3,
+                saleValue: sum(202, 'saleValue'),
+                saleQty: sum(202, 'saleQty')
+            }
+        ];
+
+        function xml(nodeName, rec) {
+            var ret = '<' + nodeName + '>';
+
+            if (Ext.isArray(rec)) {
+                for (var i = 0; i < rec.length; ++i) {
+                    ret += xml('record', rec[i]);
+                }
+            }
+            else {
+                for (var k in rec) {
+                    ret += '<' + k + '>' + rec[k] + '</' + k + '>';
+                }
+            }
+
+            return ret + '</' + nodeName + '>';
+        }
+
+        var xmlData = '<root>' + xml('data', data) + xml('summary', summary) + '</root>';
+
+        afterEach(function() {
+            Ext.undefine('spec.Sale');
         });
 
-        it('should correctly render the data in the view', function () {
-            var rows = grid.view.body.query('.x-grid-row-summary');
+        function createHarness(summaryCfg, readerCfg) {
+            store = new Ext.data.Store({
+                model: 'spec.Sale',
+                groupField: 'itemId',
+                autoDestroy: true,
+                data: MockAjax.prototype.xmlDOM(xmlData),
+                proxy: {
+                    type: 'memory',
+                    reader: Ext.apply({
+                        type: 'xml',
+                        rootProperty: 'data',
+                        record: 'record'
+                    }, readerCfg)
+                }
+            });
 
-            expect((rows[0].textContent || rows[0].innerText).replace(/\s/g, '')).toBe('Student1students42$67.00');
-            expect((rows[1].textContent || rows[1].innerText).replace(/\s/g, '')).toBe('Student2students99$100.00');
+            groupingSummary = new Ext.grid.feature.GroupingSummary(Ext.apply({
+                groupHeaderTpl: 'Subject: {name}',
+                ftype: 'groupingsummary'
+            }, summaryCfg));
+
+            grid = new Ext.grid.Panel({
+                title: 'Sales',
+                height: 600,
+                width: 450,
+                renderTo: Ext.getBody(),
+                store: store,
+                features: groupingSummary,
+                columns: [
+                    {
+                        text: 'Item',
+                        dataIndex: 'itemId'
+                    },
+                    {
+                        text: 'Date',
+                        dataIndex: 'saleDate',
+                        flex: 1,
+                        xtype: 'datecolumn',
+                        format: 'Y-m-d',
+                        summaryType: 'count'
+                    },
+                    {
+                        xtype: 'numbercolumn',
+                        text: 'Value',
+                        dataIndex: 'saleValue',
+                        format: '0.00',
+                        summaryType: 'sum'
+                    },
+                    {
+                        xtype: 'numbercolumn',
+                        text: 'Qty',
+                        dataIndex: 'saleQty',
+                        format: '00',
+                        summaryType: 'sum'
+                    }
+                ]
+            });
+        }
+
+        describe('remoteRoot', function() {
+            beforeEach(function() {
+                Ext.define('spec.Sale', {
+                    extend: 'Ext.data.Model',
+                    fields: [
+                        { name: 'itemId', type: 'string' },
+                        { name: 'saleDate', type: 'date', dateFormat: 'Y-m-d' },
+                        { name: 'saleValue', type: 'float' },
+                        { name: 'saleQty', type: 'int' }
+                    ],
+
+                    summary: {
+                        saleDate: {
+                            type: 'int',
+                            summary: 'count'
+                        }
+                    }
+                });
+
+                createHarness({
+                    remoteRoot: 'summary'
+                });
+            });
+
+            it('should have the proper values for each summary record', function() {
+                expect(groupingSummary.summaryRows).toEqual([
+                    { itemId: '101', saleDate: 4, saleValue: 54.3, saleQty: 43 },
+                    { itemId: '202', saleDate: 3, saleValue: 40.8, saleQty: 35 }
+                ]);
+            });
         });
 
-        it('should create a summaryData object for each group', function () {
-            var summaryData = groupingSummary.summaryData;
+        describe('summaryRootProperty', function() {
+            beforeEach(function() {
+                Ext.define('spec.Sale', {
+                    extend: 'Ext.data.Model',
+                    fields: [
+                        { name: 'itemId', type: 'int' },
+                        {
+                            name: 'saleDate',
+                            type: 'date',
+                            dateFormat: 'Y-m-d',
+                            summary: {
+                                type: 'int',
+                                summary: 'count'
+                            }
+                        },
+                        { name: 'saleValue', type: 'float' },
+                        { name: 'saleQty', type: 'int' }
+                    ]
+                });
 
-            expect(summaryData['Student 1']).toBeDefined();
-            expect(summaryData['Student 2']).toBeDefined();
-        });
+                createHarness({}, {
+                    summaryRootProperty: 'summary'
+                });
+            });
 
-        it('should create a metaGroupCache entry for each group', function () {
-            var metaGroupCache = groupingSummary.getCache();
-
-            expect(metaGroupCache['Student 1']).toBeDefined();
-            expect(metaGroupCache['Student 2']).toBeDefined();
+            it('should have the proper values for each summary record', function() {
+                expect(groupingSummary.summaryRows).toEqual([
+                    { itemId: 101, saleDate: 4, saleValue: 54.3, saleQty: 43 },
+                    { itemId: 202, saleDate: 3, saleValue: 40.8, saleQty: 35 }
+                ]);
+            });
         });
     });
 });
-

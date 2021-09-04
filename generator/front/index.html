@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
 
-    <title>Test Generator</title>
+    <title>MyApp</title>
 
     <script type="text/javascript">
         var Ext = Ext || {}; // Ext namespace won't be defined yet...
@@ -29,8 +29,8 @@
                 profile = 'modern';
             }
             else {
-                // profile = tags.desktop ? 'classic' : 'modern';
-                profile = tags.phone ? 'modern' : 'classic';
+                profile = tags.desktop ? 'classic' : 'modern';
+                //profile = tags.phone ? 'modern' : 'classic';
             }
 
             Ext.manifest = profile; // this name must match a build profile name
@@ -45,7 +45,7 @@
     </script>
 
     <!-- The line below must be kept intact for Sencha Cmd to build your application -->
-    <script id="microloader" data-app="6b780feb-7535-4eb8-82ec-7e73054ef48a" type="text/javascript" src="bootstrap.js"></script>
+    <script id="microloader" data-app="5172e112-1821-43a6-90a8-6929084596c7" type="text/javascript" src="bootstrap.js"></script>
 
 </head>
 <body></body>

@@ -1,6 +1,6 @@
 {
-    "name": "test",
-    "namespace": "test",
+    "name": "MyApp",
+    "namespace": "MyApp",
     "version": "1.0.0.0",
     "framework": "ext",
 
@@ -49,7 +49,7 @@
      * Fashion build configuration properties.
      */
     "fashion": {
-
+        "missingParameters": "error",
         "inliner": {
             /**
              * Disable resource inliner. Production builds enable this by default.
@@ -64,13 +64,13 @@
     "sass": {
         /**
          * The root namespace to use when mapping *.scss files to classes in the
-         * sass/src and sass/var directories. For example, "test.view.Foo" would
-         * map to "sass/src/view/Foo.scss". If we changed this to "test.view" then
+         * sass/src and sass/var directories. For example, "MyApp.view.Foo" would
+         * map to "sass/src/view/Foo.scss". If we changed this to "MyApp.view" then
          * it would map to "sass/src/Foo.scss". To style classes outside the app's
          * root namespace, change this to "". Doing so would change the mapping of
-         * "test.view.Foo" to "sass/src/test/view/Foo.scss".
+         * "MyApp.view.Foo" to "sass/src/MyApp/view/Foo.scss".
          */
-        "namespace": "test",
+        "namespace": "MyApp",
 
         /**
          * Generated sass source settings
@@ -489,14 +489,47 @@
      */
 
     "archivePath": "archive/${build.id}",
+
+    /**
+     * Build Profiles. This object's properties are each a "build profile". You can
+     * add as many as you need to produce optimized builds for devices, themes, locales
+     * or other criteria. Your "Ext.beforeLoad" hook (see index.html) is responsible for
+     * selecting the desired build profile by setting "Ext.manifest" to one of these
+     * names.
+     *
+     *     "builds": {
+     *         "classic": {
+     *             "toolkit": "classic",
+     *             "theme": "theme-neptune"
+     *         },
+     *
+     *         "modern": {
+     *             "toolkit": "modern",
+     *             "theme": "theme-neptune"
+     *         }
+     *     }
+     *
+     */
+
     "builds": {
         "classic": {
             "toolkit": "classic",
-            "theme": "theme-crisp",
+            "theme": "theme-triton",
             "sass": {
                 "generated": {
                     "var": "classic/sass/save.scss",
                     "src": "classic/sass/save"
+                }
+            }
+        },
+
+        "modern": {
+            "toolkit": "modern",
+            "theme": "theme-material",
+            "sass": {
+                "generated": {
+                    "var": "modern/sass/save.scss",
+                    "src": "modern/sass/save"
                 }
             }
         }
@@ -514,5 +547,5 @@
      * Uniquely generated id for this application, used as prefix for localStorage keys.
      * Normally you should never change this value.
      */
-    "id": "6b780feb-7535-4eb8-82ec-7e73054ef48a"
+    "id": "5172e112-1821-43a6-90a8-6929084596c7"
 }

@@ -1,14 +1,13 @@
-/* global Ext, jasmine, expect, xit */
-
-describe('Ext.menu.Item', function () {
-    var menu, item;
+topSuite("Ext.menu.Item", ['Ext.app.ViewModel', 'Ext.app.ViewController'], function() {
+    var itNotTouch = jasmine.supportsTouch ? xit : it,
+        menu, item;
 
     function makeMenu(itemCfg, menuCfg) {
         menu = Ext.widget(Ext.apply({
             xtype: 'menu',
             items: itemCfg
         }, menuCfg));
-        menu.show();
+        menu.showAt(0, 0);
 
         item = menu.items.getAt(0);
     }
@@ -21,14 +20,92 @@ describe('Ext.menu.Item', function () {
     function clickItem(theItem, doClick) {
         theItem = theItem || item;
         jasmine.fireMouseEvent(theItem.itemEl.dom, 'click');
-            
+
         // Simulated events does not cause default action on anchors with href
         if (doClick) {
             theItem.itemEl.dom.click();
         }
     }
 
-    describe('on click', function () {
+    describe('empty text', function() {
+        function expectNodeText(expected) {
+            // IE11 normalizes \u00a0 to a normal space as innerText
+            var actual = item.textEl.dom.innerText;
+
+            if (actual.length === 1 && actual.charCodeAt(0) === 32) {
+                actual = '\u00a0';
+            }
+
+            expect(actual).toBe(expected);
+        }
+
+        it('should match item height with text', function() {
+            makeMenu([{
+                text: ''
+            }, {
+                text: 'Foo'
+            }]);
+            expect(menu.items.getAt(0).getHeight()).toBe(menu.items.getAt(1).getHeight());
+        });
+
+        describe('at configuration', function() {
+            it('should not use empty text when a value is provided', function() {
+                makeMenu({
+                    text: 'Foo'
+                });
+                expect(item.textEl).toHaveHtml('Foo');
+            });
+
+            it('should use empty text for empty string', function() {
+                makeMenu({
+                    text: ''
+                });
+                expectNodeText(item.emptyText);
+            });
+
+            it('should use empty text for null', function() {
+                makeMenu({
+                    text: null
+                });
+                expectNodeText(item.emptyText);
+            });
+
+            it('should use empty text for undefined', function() {
+                makeMenu({
+                    text: undefined
+                });
+                expectNodeText(item.emptyText);
+            });
+        });
+
+        describe('dynamic', function() {
+            it('should use empty text for empty string', function() {
+                makeMenu({
+                    text: 'Foo'
+                });
+                item.setText('');
+                expectNodeText(item.emptyText);
+            });
+
+            it('should use empty text for null', function() {
+                makeMenu({
+                    text: 'Foo'
+                });
+                item.setText(null);
+                expectNodeText(item.emptyText);
+            });
+
+            it('should use empty text for undefined', function() {
+                makeMenu({
+                    text: 'Foo'
+                });
+                item.setText(undefined);
+                expectNodeText(item.emptyText);
+            });
+        });
+    });
+
+    describe('on click', function() {
         describe("click event/handler", function() {
             var spy;
 
@@ -68,6 +145,7 @@ describe('Ext.menu.Item', function () {
                     clickItem();
 
                     var args = spy.mostRecentCall.args;
+
                     expect(args[0]).toBe(item);
                     expect(args[1] instanceof Ext.event.Event).toBe(true);
                 });
@@ -83,6 +161,7 @@ describe('Ext.menu.Item', function () {
 
                 it("should used the passed scope", function() {
                     var o = {};
+
                     makeMenu({
                         text: 'Foo',
                         scope: o,
@@ -94,6 +173,7 @@ describe('Ext.menu.Item', function () {
 
                 it("should be able to route the handler to a view controller", function() {
                     var ctrl = new Ext.app.ViewController();
+
                     ctrl.onFoo = spy;
                     makeMenu({
                         text: 'Foo',
@@ -107,6 +187,7 @@ describe('Ext.menu.Item', function () {
 
                 it("should have the menu hidden when the handler fires with hideOnClick: true", function() {
                     var visible;
+
                     makeMenu({
                         text: 'Foo',
                         handler: spy.andCallFake(function() {
@@ -119,6 +200,7 @@ describe('Ext.menu.Item', function () {
 
                 it("should fire the handler after the click event", function() {
                     var order = [];
+
                     makeMenu({
                         text: 'Foo',
                         listeners: {
@@ -158,7 +240,12 @@ describe('Ext.menu.Item', function () {
                         },
                         handler: spy
                     });
+
+                    // Error messages are expected
+                    spyOn(Ext, 'log');
+                    spyOn(Ext.Error, 'raise');
                     clickItem();
+
                     expect(spy).not.toHaveBeenCalled();
                 });
             });
@@ -197,12 +284,14 @@ describe('Ext.menu.Item', function () {
                     clickItem();
 
                     var args = spy.mostRecentCall.args;
+
                     expect(args[0]).toBe(item);
                     expect(args[1] instanceof Ext.event.Event).toBe(true);
                 });
 
                 it("should have the menu hidden when the handler fires with hideOnClick: true", function() {
                     var visible;
+
                     makeMenu({
                         text: 'Foo',
                         listeners: {
@@ -243,6 +332,7 @@ describe('Ext.menu.Item', function () {
 
                     return item.menu;
                 }
+
                 it("should hide a parent menu", function() {
                     makeMenu({
                         text: 'Foo',
@@ -296,45 +386,51 @@ describe('Ext.menu.Item', function () {
             });
         });
 
-        describe('href property', function () {
+        describe('href property', function() {
             // Note that the specs were failing in FF 24 without the waitsFor().
             // Note that it's necessary to set the activeItem and focusedItem to test the API!
             var menuItem;
 
-            afterEach(function () {
+            afterEach(function() {
                 menuItem = null;
                 location.hash = '';
             });
 
-            it('should follow the target', function () {
+            xit('should follow the target', function() {
                 makeMenu([{
                     text: 'menu item one',
                     href: '#ledzep'
                 }, {
                     text: 'menu item two'
                 }]);
+                item.focus();
 
-                menu.activeItem = menu.focusedItem = item;
-                clickItem(item, Ext.isIE9m);
+                waitsForFocus(item);
 
-                waitsFor(function () {
+                runs(function() {
+                    clickItem(item, true);
+                });
+
+                waitsFor(function() {
                     return location.hash === '#ledzep';
                 }, 'timed out waiting for hash to change', 1000);
 
-                runs(function () {
+                runs(function() {
                     expect(location.hash).toBe('#ledzep');
                 });
             });
-            
-            // TODO This test does not work properly in IE10+ due to events being translated
-            (Ext.isIE10p ? xit : it)('should not follow the target link if the click listener stops the event', function () {
+
+            // TODO This test does not work properly due to events being translated
+            // TODO: Reinstate this for touch platforms when https://sencha.jira.com/browse/EXT-4 is fixed.
+            // We cannot now preventDefault on native click events on touch because of click event synthesis.
+            xit('should not follow the target link if the click listener stops the event', function() {
                 var hashValue = Ext.isIE ? '#' : '';
 
                 makeMenu([{
                     text: 'menu item one',
                     href: '#motley',
                     listeners: {
-                        click: function (cmp, e) {
+                        click: function(cmp, e) {
                             e.preventDefault();
                         }
                     }
@@ -345,20 +441,20 @@ describe('Ext.menu.Item', function () {
                 menu.activeItem = menu.focusedItem = item;
                 clickItem(item, Ext.isIE9m);
 
-                waitsFor(function () {
+                waitsFor(function() {
                     return location.hash === hashValue;
                 }, 'timed out waiting for hash to change', 1000);
 
-                runs(function () {
+                runs(function() {
                     expect(location.hash).toBe(hashValue);
                 });
             });
         });
     });
 
-    describe('disabled', function () {
-        describe('when item has an href config', function () {
-            it('should stop the event', function () {
+    describe('disabled', function() {
+        describe('when item has an href config', function() {
+            it('should stop the event', function() {
                 makeMenu({
                     disabled: true,
                     href: '#menu'
@@ -368,12 +464,13 @@ describe('Ext.menu.Item', function () {
             });
         });
 
-        it("should gain focus and activate on mouseover", function() {
+        itNotTouch("should gain focus and activate on mouseover", function() {
             makeMenu([{
                 text: 'Foo',
                 disabled: true
             }]);
             var item = menu.items.getAt(0);
+
             jasmine.fireMouseEvent(item.getEl(), 'mouseover');
             waitsFor(function() {
                 return item.containsFocus === true;
@@ -384,7 +481,7 @@ describe('Ext.menu.Item', function () {
         });
 
         describe("submenu", function() {
-            it("should not show a submenu on mouseover", function() {
+            itNotTouch("should not show a submenu on mouseover", function() {
                 makeMenu([{
                     text: 'Foo',
                     disabled: true,
@@ -410,10 +507,10 @@ describe('Ext.menu.Item', function () {
         });
     });
 
-    describe('when destroying', function () {
+    describe('when destroying', function() {
         var m;
 
-        beforeEach(function () {
+        beforeEach(function() {
             m = new Ext.menu.Menu();
 
             makeMenu([{
@@ -425,15 +522,15 @@ describe('Ext.menu.Item', function () {
 
         });
 
-        afterEach(function () {
+        afterEach(function() {
             m = null;
         });
 
-        it('should destroy its menu', function () {
+        it('should destroy its menu', function() {
             expect(m.destroyed).toBe(true);
         });
 
-        it('should cleanup its menu reference', function () {
+        it('should cleanup its menu reference', function() {
             expect(item.menu).toBe(null);
         });
     });
@@ -445,6 +542,7 @@ describe('Ext.menu.Item', function () {
                     title: 'someTitle'
                 }
             });
+
             makeMenu({
                 text: 'Foo',
                 menu: {
@@ -456,54 +554,28 @@ describe('Ext.menu.Item', function () {
                 viewModel: vm
             });
             var subMenu = item.menu;
+
             // Render to force the VM to fire
             subMenu.show();
             vm.notify();
             expect(subMenu.getTitle()).toBe('someTitle');
         });
     });
-    
+
     describe("ARIA", function() {
         describe("simple", function() {
             beforeEach(function() {
                 makeMenu({
                     text: 'foo'
                 });
-                
+
                 menu.show();
             });
-            
+
             it("should have itemEl as ariaEl", function() {
                 expect(item.ariaEl).toBe(item.itemEl);
             });
-            
-            it("should have menuitem role", function() {
-                expect(item).toHaveAttr('role', 'menuitem');
-            });
-            
-            it("should not have aria-haspopup", function() {
-                expect(item).not.toHaveAttr('aria-haspopup');
-            });
-            
-            it("should not have aria-owns", function() {
-                expect(item).not.toHaveAttr('aria-owns');
-            });
-        });
-        
-        describe("plain", function() {
-            beforeEach(function() {
-                makeMenu({
-                    text: 'plain',
-                    plain: true
-                });
-                
-                menu.show();
-            });
-            
-            it("should have el as ariaEl", function() {
-                expect(item.ariaEl).toBe(item.el);
-            });
-            
+
             it("should have menuitem role", function() {
                 expect(item).toHaveAttr('role', 'menuitem');
             });
@@ -511,43 +583,94 @@ describe('Ext.menu.Item', function () {
             it("should not have aria-haspopup", function() {
                 expect(item).not.toHaveAttr('aria-haspopup');
             });
-            
+
             it("should not have aria-owns", function() {
                 expect(item).not.toHaveAttr('aria-owns');
             });
         });
-        
+
+        describe("plain", function() {
+            beforeEach(function() {
+                makeMenu({
+                    text: 'plain',
+                    plain: true
+                });
+
+                menu.show();
+            });
+
+            it("should have el as ariaEl", function() {
+                expect(item.ariaEl).toBe(item.el);
+            });
+
+            it("should have menuitem role", function() {
+                expect(item).toHaveAttr('role', 'menuitem');
+            });
+
+            it("should not have aria-haspopup", function() {
+                expect(item).not.toHaveAttr('aria-haspopup');
+            });
+
+            it("should not have aria-owns", function() {
+                expect(item).not.toHaveAttr('aria-owns');
+            });
+        });
+
         describe("with submenu", function() {
-            describe("via config", function() {
+            describe("via config without hidden menu", function() {
                 beforeEach(function() {
                     makeMenu({
                         text: 'submenu',
                         menu: {
+                            hidden: false,
                             items: [{
                                 text: 'sub-item'
                             }]
                         }
                     });
-                    
+
                     menu.show();
                 });
-                
+
                 it("should have aria-haspopup", function() {
                     expect(item).toHaveAttr('aria-haspopup', 'true');
                 });
-                
+
                 it("should have aria-owns", function() {
                     expect(item).toHaveAttr('aria-owns', item.menu.id);
                 });
             });
-            
+
+            describe("via config with hidden menu", function() {
+                beforeEach(function() {
+                    makeMenu({
+                        text: 'submenu',
+                        menu: {
+                            hidden: true,
+                            items: [{
+                                text: 'sub-item'
+                            }]
+                        }
+                    });
+
+                    menu.show();
+                });
+
+                it("should have aria-owns when menu item is expanded", function() {
+                    item.activated = true;
+                    item.expandMenu(null, 0);
+
+                    expect(item).toHaveAttr('aria-owns', item.menu.id);
+                });
+            });
+
             describe("adding via setMenu", function() {
                 beforeEach(function() {
                     makeMenu({
                         text: 'submenu'
                     });
                 });
-                
+
                 describe("before rendering", function() {
                     beforeEach(function() {
                         item.setMenu({
@@ -555,40 +678,40 @@ describe('Ext.menu.Item', function () {
                                 text: 'sub-item'
                             }]
                         });
-                        
+
                         menu.show();
                     });
-                    
+
                     it("should have aria-haspopup", function() {
                         expect(item).toHaveAttr('aria-haspopup', 'true');
                     });
-                    
+
                     it("should have aria-owns", function() {
                         expect(item).toHaveAttr('aria-owns', item.menu.id);
                     });
                 });
-                
+
                 describe("after rendering", function() {
                     beforeEach(function() {
                         menu.show();
-                        
+
                         item.setMenu({
                             items: [{
                                 text: 'sub-item'
                             }]
                         });
                     });
-                    
+
                     it("should have aria-haspopup", function() {
                         expect(item).toHaveAttr('aria-haspopup', 'true');
                     });
-                    
+
                     it("should have aria-owns", function() {
                         expect(item).toHaveAttr('aria-owns', item.menu.id);
                     });
                 });
             });
-            
+
             describe("removing via setMenu", function() {
                 beforeEach(function() {
                     makeMenu({
@@ -600,31 +723,31 @@ describe('Ext.menu.Item', function () {
                         }
                     });
                 });
-                
+
                 describe("before rendering", function() {
                     beforeEach(function() {
                         item.setMenu(null);
                     });
-                    
+
                     it("should not have aria-haspopup", function() {
                         expect(item).not.toHaveAttr('aria-haspopup');
                     });
-                    
+
                     it("should have no aria-owns", function() {
                         expect(item).not.toHaveAttr('aria-owns');
                     });
                 });
-                
+
                 describe("after rendering", function() {
                     beforeEach(function() {
                         menu.show();
                         item.setMenu(null);
                     });
-                    
+
                     it("should not have aria-haspopup", function() {
                         expect(item).not.toHaveAttr('aria-haspopup');
                     });
-                    
+
                     it("should not have aria-owns", function() {
                         expect(item).not.toHaveAttr('aria-owns');
                     });
@@ -664,7 +787,7 @@ describe('Ext.menu.Item', function () {
 
             // No glyph character
             expect(item.iconEl.dom.innerHTML).toBe('');
-            
+
             // iconEl must use the iconCls
             expect(item.iconEl.hasCls('foo-icon-class')).toBe(true);
 
@@ -700,7 +823,7 @@ describe('Ext.menu.Item', function () {
             item.setIcon('resources/images/foo.gif');
 
             expect(Ext.String.endsWith(item.iconEl.hasCls('foo-icon-class'))).toBe(false);
-            
+
             // iconEl must use the image as the background image
             // Some browsers quote the url value, some don't. Remove quotes.
             expect(Ext.String.endsWith(item.iconEl.getStyle('background-image').replace(/\"/g, ''), 'resources/images/foo.gif)')).toBe(true);
@@ -722,7 +845,7 @@ describe('Ext.menu.Item', function () {
 
             // No glyph character
             expect(item.iconEl.dom.innerHTML).toBe('');
-            
+
             // iconEl must use the image as the background image
             // Some browsers quote the url value, some don't. Remove quotes.
             expect(Ext.String.endsWith(item.iconEl.getStyle('background-image').replace(/\"/g, ''), 'resources/images/foo.gif)')).toBe(true);
@@ -741,7 +864,7 @@ describe('Ext.menu.Item', function () {
 
             // No glyph character
             expect(item.iconEl.dom.innerHTML).toBe('');
-            
+
             // iconEl must use the iconCls
             expect(item.iconEl.hasCls('foo-icon-class')).toBe(true);
         });
